@@ -1,10 +1,12 @@
 <script lang="ts">
-	import type { PageServerData } from './$types';
-
-	export let data: PageServerData;
-	const users = data.users;
+	import CardSaldo from '$lib/components/CardSaldo.svelte';
+	import CardMov from '$lib/components/CardMov.svelte';
 </script>
 
-{#each users as user}
-	<li>{user.id} - {user.name}</li>
-{/each}
+<main>
+	<div class="grid grid-cols-3 grid-rows-1 gap-8">
+		<CardSaldo />
+		<CardMov saldo={50} />
+		<CardMov saldo={-50} />
+	</div>
+</main>
