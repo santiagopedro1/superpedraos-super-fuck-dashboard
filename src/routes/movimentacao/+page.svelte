@@ -1,9 +1,12 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select';
 	import { Button } from '$lib/components/ui/button';
-	import { today } from '@internationalized/date';
+	import AddMovDialog from '$lib/components/AddMovDialog.svelte';
+
 	import type { Selected } from 'bits-ui';
+
 	import { enhance } from '$app/forms';
+	import { today } from '@internationalized/date';
 
 	const hoje = today('America/Sao_Paulo');
 	const { year, month } = hoje;
@@ -32,6 +35,7 @@
 <div>
 	<form
 		method="POST"
+		action="?/mesAno"
 		class="flex items-center justify-center gap-8"
 		use:enhance
 	>
@@ -89,3 +93,5 @@
 		<Button type="submit">Vai</Button>
 	</form>
 </div>
+
+<AddMovDialog />
