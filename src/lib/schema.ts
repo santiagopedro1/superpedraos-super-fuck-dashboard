@@ -1,6 +1,18 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 
-export const user = sqliteTable('user', {
+export const partes = sqliteTable('partes', {
+	id: integer('parte_id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+	nome: text('nome').notNull()
+});
+
+export const transacoes = sqliteTable('transacoes', {
 	id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-	name: text('name')
+	tipo: text('tipo', { enum: ['entrada', 'saída'] }).notNull(),
+	valor: real('valor').notNull(),
+	data: text('data').notNull(),
+	motivo: text('motivo').notNull(),
+	dinheiro: integer('dinheiro', { mode: 'boolean' }).notNull(),
+	parte_id: integer('parte_id')
+		.references(() => partes.id)
+		.notNull()
 });
