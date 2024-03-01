@@ -8,8 +8,8 @@
 			href: '/'
 		},
 		{
-			name: 'Movimentação',
-			href: '/movimentacao'
+			name: 'Demonstrativo',
+			href: '/demonstrativo'
 		}
 	];
 
