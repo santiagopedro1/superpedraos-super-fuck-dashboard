@@ -3,7 +3,7 @@
 
 	import { enhance } from '$app/forms';
 	import * as Select from '$lib/components/ui/select';
-	import type { ActionData } from './$types';
+	import type { ActionData, PageServerData } from './$types';
 
 	const mesesOpt = [
 		'Janeiro',
@@ -22,10 +22,9 @@
 
 	const anosOpt = [2023, 2024].map((year) => ({ value: year, label: String(year) }));
 	export let form: ActionData;
+	export let data: PageServerData;
 
 	let mesSelecionado: number, anoSelecionado: number;
-
-	console.log(form);
 </script>
 
 <div>
@@ -41,6 +40,9 @@
 	>
 		<Select.Root
 			items={anosOpt}
+			selected={anoSelecionado
+				? anosOpt.find((m) => m.value === anoSelecionado)
+				: anosOpt.find((m) => m.value === data.anoHoje)}
 			onSelectedChange={(v) => {
 				v ? (anoSelecionado = v.value) : undefined;
 			}}
@@ -62,6 +64,9 @@
 			<Select.Input name="ano" />
 		</Select.Root>
 		<Select.Root
+			selected={anoSelecionado
+				? mesesOpt.find((m) => m.value === mesSelecionado)
+				: mesesOpt.find((m) => m.value === data.mesHoje)}
 			items={mesesOpt}
 			onSelectedChange={(v) => (v ? (mesSelecionado = v.value) : undefined)}
 		>
