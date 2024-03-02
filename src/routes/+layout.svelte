@@ -4,7 +4,7 @@
 
 	const links = [
 		{
-			name: 'Visão Geral',
+			name: 'Visão geral',
 			href: '/'
 		},
 		{
@@ -12,8 +12,6 @@
 			href: '/demonstrativo'
 		}
 	];
-
-	let currPath = $page.url.pathname;
 </script>
 
 <div class="min-h-screen bg-zinc-300 text-black">
@@ -27,10 +25,10 @@
 			{#each links as link}
 				<a
 					href={link.href}
-					class="rounded-md px-3 py-2 text-sm font-bold {currPath === link.href
+					class="rounded-md px-3 py-2 text-sm font-bold {$page.url.pathname === link.href
 						? 'color-white pointer-events-none bg-fuchsia-800 text-white'
 						: 'hover: hover:bg-fuchsia-800 hover:text-white'}"
-					on:click={() => (currPath = link.href)}>{link.name}</a
+					on:click={() => ($page.url.pathname = link.href)}>{link.name}</a
 				>
 			{/each}
 		</nav>
