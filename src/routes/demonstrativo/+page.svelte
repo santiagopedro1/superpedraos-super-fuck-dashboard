@@ -64,7 +64,7 @@
 			<Select.Input name="ano" />
 		</Select.Root>
 		<Select.Root
-			selected={anoSelecionado
+			selected={mesSelecionado
 				? mesesOpt.find((m) => m.value === mesSelecionado)
 				: mesesOpt.find((m) => m.value === data.mesHoje)}
 			items={mesesOpt}
@@ -90,10 +90,31 @@
 	</form>
 </div>
 
-<div class="mt-8 px-12">
+<div class="mt-12 grid place-items-center">
 	{#if form}
-		{#if form.success}
-			<p>Você escolheu {mesesOpt[form.data.mes - 1].label} de {form.data.ano}</p>
+		{#if form.ok}
+			<table>
+				<thead class="border-b-2 border-primary">
+					<tr>
+						{#if form.transacoes}
+							{#each Object.keys(form.transacoes[0]) as headers}
+								<th class="capitalize">{headers}</th>
+							{/each}
+						{/if}
+					</tr>
+				</thead>
+				<tbody>
+					{#if form.transacoes}
+						{#each form.transacoes as transacao}
+							<tr class="hover:bg-primary hover:text-white">
+								{#each Object.values(transacao) as value}
+									<td class="px-4 py-2 text-center">{value}</td>
+								{/each}
+							</tr>
+						{/each}
+					{/if}
+				</tbody>
+			</table>
 		{:else}
 			<p>{form.error}</p>
 		{/if}
