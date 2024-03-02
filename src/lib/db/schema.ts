@@ -9,7 +9,7 @@ export const transacoes = sqliteTable('transacoes', {
 	id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
 	tipo: text('tipo', { enum: ['entrada', 'saída'] }).notNull(),
 	valor: real('valor').notNull(),
-	data: text('data').notNull(),
+	data: integer('data', { mode: 'timestamp' }).notNull(),
 	motivo: text('motivo').notNull(),
 	dinheiro: integer('dinheiro', { mode: 'boolean' }).notNull(),
 	parte_id: integer('parte_id')
