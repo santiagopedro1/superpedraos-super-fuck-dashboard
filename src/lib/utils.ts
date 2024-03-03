@@ -59,3 +59,7 @@ export const currencyFormatter = (n: number) => {
 	const r = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 	return r.format(n);
 };
+
+export const dateFormatter = (d: Date) => {
+	return d.toLocaleDateString('pt-BR');
+};
