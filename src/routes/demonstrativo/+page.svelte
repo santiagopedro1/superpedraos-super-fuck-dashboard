@@ -6,6 +6,7 @@
 	import type { ActionData, PageServerData } from './$types';
 
 	import { currencyFormatter, dateFormatter } from '$lib/utils';
+	import CardMov from '$lib/components/CardMov.svelte';
 
 	const mesesOpt = [
 		'Janeiro',
@@ -97,6 +98,11 @@
 <div class="mt-12 grid place-items-center text-xl">
 	{#if form}
 		{#if form.ok}
+			<CardMov
+				title="Saldo de {mesesOpt[form.data.mes - 1].label} de {form.data.ano}"
+				saldo={form.saldo}
+				total={form.transacoes?.length}
+			/>
 			<table>
 				<thead class="border-b-2 border-primary">
 					<tr>
