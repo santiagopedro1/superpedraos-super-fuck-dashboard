@@ -30,17 +30,30 @@ export const actions = {
 				.leftJoin(partes, eq(transacoes.parte_id, partes.id))
 				.orderBy(asc(transacoes.id));
 
-			console.log(res);
+			let saldo = 0;
+			res.forEach((t) => {
+				if (t.transacoes.tipo === 'entrada') saldo += t.transacoes.valor;
+				else saldo -= t.transacoes.valor;
+			});
 
 			if (res.length)
 				return {
 					ok: true,
-					transacoes: res
+					data: {
+						mes,
+						ano
+					},
+					transacoes: res,
+					saldo
 				};
 			else
 				return {
 					ok: false,
-					error: 'Nenhuma transação encontrada'
+					error: 'Nenhuma transação encontrada',
+					data: {
+						mes,
+						ano
+					}
 				};
 		}
 	}
