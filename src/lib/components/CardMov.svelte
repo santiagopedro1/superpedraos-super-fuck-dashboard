@@ -5,14 +5,14 @@
 
 	export let saldo = 150;
 	export let total = 15;
-	const tipo = saldo > 0 ? 'entradas' : 'saidas';
+	export let title: string;
+
+	const tipo = saldo > 0 ? 'up' : 'down';
 </script>
 
 <Card class="flex flex-row items-center gap-4 bg-neutral-100 px-6">
-	<div
-		class="flex items-center rounded-full p-6 {tipo === 'entradas' ? 'bg-green-500' : 'bg-red-500'}"
-	>
-		{#if tipo === 'entradas'}
+	<div class="flex items-center rounded-full p-6 {tipo === 'up' ? 'bg-green-500' : 'bg-red-500'}">
+		{#if tipo === 'up'}
 			<ArrowUp
 				size="48"
 				color="white"
@@ -27,11 +27,11 @@
 	<div>
 		<CardHeader class="flex flex-row items-center justify-between">
 			<CardTitle>
-				<h2 class="capitalize">{tipo}</h2>
+				<h2>{title}</h2>
 			</CardTitle>
 		</CardHeader>
 		<CardContent>
-			<p class="text-2xl font-bold {tipo === 'entradas' ? 'text-green-500' : 'text-red-500'}">
+			<p class="text-2xl font-bold {tipo === 'up' ? 'text-green-500' : 'text-red-500'}">
 				{currencyFormatter(saldo)}
 			</p>
 		</CardContent>
