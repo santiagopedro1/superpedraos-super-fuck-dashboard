@@ -28,7 +28,7 @@ export const actions = {
 				.from(transacoes)
 				.where(and(gte(transacoes.data, start), lte(transacoes.data, end)))
 				.leftJoin(partes, eq(transacoes.parte_id, partes.id))
-				.orderBy(asc(transacoes.id));
+				.orderBy(asc(transacoes.data));
 
 			let saldo = 0;
 			res.forEach((t) => {
