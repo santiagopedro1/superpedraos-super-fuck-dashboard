@@ -5,6 +5,8 @@
 	import * as Select from '$lib/components/ui/select';
 	import type { ActionData, PageServerData } from './$types';
 
+	import { currencyFormatter, dateFormatter } from '$lib/utils';
+
 	const mesesOpt = [
 		'Janeiro',
 		'Fevereiro',
@@ -21,6 +23,8 @@
 	].map((month, i) => ({ value: i + 1, label: month }));
 
 	const anosOpt = [2023, 2024].map((year) => ({ value: year, label: String(year) }));
+	const headers = ['nome', 'tipo', 'valor', 'data', 'motivo'];
+
 	export let form: ActionData;
 	export let data: PageServerData;
 
@@ -90,26 +94,28 @@
 	</form>
 </div>
 
-<div class="mt-12 grid place-items-center">
+<div class="mt-12 grid place-items-center text-xl">
 	{#if form}
 		{#if form.ok}
 			<table>
 				<thead class="border-b-2 border-primary">
 					<tr>
-						{#if form.transacoes}
-							{#each Object.keys(form.transacoes[0]) as headers}
-								<th class="capitalize">{headers}</th>
-							{/each}
-						{/if}
+						{#each headers as header}
+							<th class="px-4 py-2 text-center font-bold capitalize">{header}</th>
+						{/each}
 					</tr>
 				</thead>
 				<tbody>
 					{#if form.transacoes}
 						{#each form.transacoes as transacao}
-							<tr class="hover:bg-primary hover:text-white">
-								{#each Object.values(transacao) as value}
-									<td class="px-4 py-2 text-center">{value}</td>
-								{/each}
+							<tr class="border-b-2 border-slate-800 border-opacity-50 py-4 hover:bg-slate-300">
+								<td class="px-12 py-5 text-center">{transacao.partes?.nome}</td>
+								<td class="px-12 py-5 text-center capitalize">{transacao.transacoes.tipo}</td>
+								<td class="px-12 py-5 text-center"
+									>{currencyFormatter(transacao.transacoes.valor)}</td
+								>
+								<td class="px-12 py-5 text-center">{dateFormatter(transacao.transacoes.data)}</td>
+								<td class="px-12 py-5 text-center">{transacao.transacoes.motivo}</td>
 							</tr>
 						{/each}
 					{/if}

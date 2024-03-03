@@ -2,7 +2,8 @@ import type { Actions, PageServerLoad } from './$types';
 import { today } from '@internationalized/date';
 
 import { db } from '$lib/db/database';
-import { gte, lte, and } from 'drizzle-orm';
+import { gte, lte, eq, asc, and } from 'drizzle-orm';
+import { partes, transacoes } from '$lib/db/schema';
 
 const hoje = today('America/Sao_Paulo');
 const { year, month } = hoje;
@@ -22,9 +23,14 @@ export const actions = {
 			const start = new Date(ano, mes - 1, 1);
 			const end = new Date(ano, mes, 0);
 
-			const res = await db.query.transacoes.findMany({
-				where: (t) => and(gte(t.data, start), lte(t.data, end))
-			});
+			const res = await db
+				.select()
+				.from(transacoes)
+				.where(and(gte(transacoes.data, start), lte(transacoes.data, end)))
+				.leftJoin(partes, eq(transacoes.parte_id, partes.id))
+				.orderBy(asc(transacoes.id));
+
+			console.log(res);
 
 			if (res.length)
 				return {
