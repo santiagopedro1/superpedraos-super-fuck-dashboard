@@ -51,7 +51,7 @@
 </script>
 
 <main class="grid place-content-center place-items-center gap-12">
-	<div class="grid grid-cols-3 grid-rows-1 gap-12">
+	<div class="grid grid-cols-3 grid-rows-1 gap-16">
 		<CardSaldo />
 		<CardMov
 			title="Entradas"
@@ -66,6 +66,9 @@
 	<Card.Root class="w-full">
 		<Card.Header>
 			<Card.Title>Saldo total durante o ano</Card.Title>
+			<Card.Description
+				>Saldo total de entradas e saídas durante o ano. Fake obviamente</Card.Description
+			>
 		</Card.Header>
 		<Card.Content>
 			<Chart {config} />
