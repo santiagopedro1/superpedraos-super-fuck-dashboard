@@ -41,6 +41,7 @@
 		"@internationalized/date": "^3.5.2",
 		"@libsql/client": "^0.5.2",
 		"bits-ui": "^0.18.2",
+		"chart.js": "^4.4.2",
 		"clsx": "^2.1.0",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.29.4",
