@@ -8,7 +8,7 @@
 	import { enhance } from '$app/forms';
 	import type { ActionData, PageServerData } from './$types';
 
-	import { currencyFormatter, dateFormatter } from '$lib/utils';
+	import { currencyFormatter, dateFormatter, isEntrada } from '$lib/utils';
 
 	const mesesOpt = [
 		'Janeiro',
@@ -26,7 +26,7 @@
 	].map((month, i) => ({ value: i + 1, label: month }));
 
 	const anosOpt = [2023, 2024].map((year) => ({ value: year, label: String(year) }));
-	const headers = ['nome', 'tipo', 'valor', 'data', 'motivo'];
+	const headers = ['nome', 'tipo', 'valor', 'data', 'origem/destino'];
 
 	export let form: ActionData;
 	export let data: PageServerData;
@@ -119,11 +119,29 @@
 					{#if form.transacoes}
 						{#each form.transacoes as transacao}
 							<Table.Row>
-								<Table.Cell>{transacao.partes?.nome}</Table.Cell>
-								<Table.Cell class="capitalize">{transacao.transacoes.tipo}</Table.Cell>
-								<Table.Cell>{currencyFormatter(transacao.transacoes.valor)}</Table.Cell>
-								<Table.Cell>{dateFormatter(transacao.transacoes.data)}</Table.Cell>
-								<Table.Cell>{transacao.transacoes.motivo}</Table.Cell>
+								<Table.Cell>
+									{#if isEntrada(transacao)}
+										{transacao.vendedor}
+									{:else}
+										{transacao.motivo}
+									{/if}
+								</Table.Cell>
+								<Table.Cell>
+									{#if isEntrada(transacao)}
+										Entrada
+									{:else}
+										Saída
+									{/if}
+								</Table.Cell>
+								<Table.Cell>{currencyFormatter(transacao.valor)}</Table.Cell>
+								<Table.Cell>{dateFormatter(transacao.data)}</Table.Cell>
+								<Table.Cell class="capitalize">
+									{#if isEntrada(transacao)}
+										{transacao.destino}
+									{:else}
+										{transacao.origem}
+									{/if}
+								</Table.Cell>
 							</Table.Row>
 						{/each}
 					{/if}

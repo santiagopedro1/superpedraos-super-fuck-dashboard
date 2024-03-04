@@ -3,12 +3,11 @@ import { today } from '@internationalized/date';
 
 import { db } from '$lib/db/database';
 import { gte, lte, eq, asc, and } from 'drizzle-orm';
-import { partes, transacoes } from '$lib/db/schema';
-
-const hoje = today('America/Sao_Paulo');
-const { year, month } = hoje;
+import { vendedores, entrada, saida } from '$lib/db/schema';
 
 export const load: PageServerLoad = async () => {
+	const hoje = today('America/Sao_Paulo');
+	const { year, month } = hoje;
 	return { mesHoje: month, anoHoje: year };
 };
 
@@ -23,33 +22,53 @@ export const actions = {
 			const start = new Date(ano, mes - 1, 1);
 			const end = new Date(ano, mes, 0);
 
-			const res = await db
-				.select()
-				.from(transacoes)
-				.where(and(gte(transacoes.data, start), lte(transacoes.data, end)))
-				.leftJoin(partes, eq(transacoes.parte_id, partes.id))
-				.orderBy(asc(transacoes.data));
+			const entradas = await db
+				.select({
+					id: entrada.id,
+					valor: entrada.valor,
+					destino: entrada.destino,
+					data: entrada.data,
+					vendedor: vendedores.nome
+				})
+				.from(entrada)
+				.innerJoin(vendedores, eq(entrada.vendedor_id, vendedores.id))
+				.where(and(gte(entrada.data, start), lte(entrada.data, end)));
 
-			let saldo = 0;
-			res.forEach((t) => {
-				if (t.transacoes.tipo === 'entrada') saldo += t.transacoes.valor;
-				else saldo -= t.transacoes.valor;
-			});
+			const saidas = await db
+				.select({
+					id: saida.id,
+					valor: saida.valor,
+					motivo: saida.motivo,
+					origem: saida.origem,
+					data: saida.data
+				})
+				.from(saida)
+				.where(and(gte(saida.data, start), lte(saida.data, end)));
 
-			if (res.length)
+			const transacoes = [...entradas, ...saidas];
+
+			if (transacoes.length) {
+				transacoes.sort((a, b) => a.data.getTime() - b.data.getTime());
+
+				let saldo = 0;
+				transacoes.forEach((t) => {
+					if ('destino' in t) {
+						saldo += t.valor;
+					} else {
+						saldo -= t.valor;
+					}
+				});
+
 				return {
 					ok: true,
-					data: {
-						mes,
-						ano
-					},
-					transacoes: res,
-					saldo
+					transacoes,
+					saldo,
+					data: { mes, ano }
 				};
-			else
+			} else
 				return {
 					ok: false,
-					error: 'Nenhuma transação encontrada',
+					error: 'Nenhuma transação encontrada para a data fornecida.',
 					data: {
 						mes,
 						ano

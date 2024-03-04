@@ -3,6 +3,22 @@ import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 
+type entrada = {
+	id: number;
+	valor: number;
+	destino: 'caixa' | 'banco';
+	data: Date;
+	vendedor: string;
+};
+
+type saida = {
+	id: number;
+	valor: number;
+	motivo: string;
+	origem: 'caixa' | 'banco';
+	data: Date;
+};
+
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
@@ -62,4 +78,8 @@ export const currencyFormatter = (n: number) => {
 
 export const dateFormatter = (d: Date) => {
 	return d.toLocaleDateString('pt-BR');
+};
+
+export const isEntrada = (t: entrada | saida): t is entrada => {
+	return 'vendedor' in t;
 };
