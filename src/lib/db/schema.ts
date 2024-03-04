@@ -1,18 +1,24 @@
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 
-export const partes = sqliteTable('partes', {
-	id: integer('parte_id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+export const vendedores = sqliteTable('vendedores', {
+	id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
 	nome: text('nome').notNull()
 });
 
-export const transacoes = sqliteTable('transacoes', {
+export const entrada = sqliteTable('entrada', {
 	id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-	tipo: text('tipo', { enum: ['entrada', 'saída'] }).notNull(),
 	valor: real('valor').notNull(),
+	destino: text('destino', { enum: ['caixa', 'banco'] }).notNull(),
 	data: integer('data', { mode: 'timestamp' }).notNull(),
-	motivo: text('motivo').notNull(),
-	dinheiro: integer('dinheiro', { mode: 'boolean' }).notNull(),
-	parte_id: integer('parte_id')
-		.references(() => partes.id)
+	vendedor_id: integer('vendedor_id')
+		.references(() => vendedores.id)
 		.notNull()
+});
+
+export const saida = sqliteTable('saida', {
+	id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+	valor: real('valor').notNull(),
+	motivo: text('motivo').notNull(),
+	origem: text('origem', { enum: ['caixa', 'banco'] }).notNull(),
+	data: integer('data', { mode: 'timestamp' }).notNull()
 });
