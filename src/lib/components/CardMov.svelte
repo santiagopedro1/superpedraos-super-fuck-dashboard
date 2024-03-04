@@ -10,7 +10,7 @@
 	const tipo = saldo > 0 ? 'up' : 'down';
 </script>
 
-<Card class="flex flex-row items-center gap-4 bg-neutral-100 px-6">
+<Card class="flex flex-row items-center gap-4 px-6">
 	<div class="flex items-center rounded-full p-6 {tipo === 'up' ? 'bg-green-500' : 'bg-red-500'}">
 		{#if tipo === 'up'}
 			<ArrowUp

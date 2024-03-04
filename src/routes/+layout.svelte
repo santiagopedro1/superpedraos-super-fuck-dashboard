@@ -14,8 +14,8 @@
 	];
 </script>
 
-<div class="min-h-screen bg-zinc-300 text-black">
-	<div class="flex items-center gap-8 bg-primary px-4 text-white">
+<div class="min-h-screen bg-background text-foreground">
+	<div class="flex items-center gap-8">
 		<img
 			src="/fn-logo.png"
 			alt="Logo"
@@ -26,8 +26,8 @@
 				<a
 					href={link.href}
 					class="rounded-md px-3 py-2 text-sm font-bold {$page.url.pathname === link.href
-						? 'color-white pointer-events-none bg-fuchsia-800 text-white'
-						: 'hover: hover:bg-fuchsia-800 hover:text-white'}"
+						? 'pointer-events-none'
+						: 'text-muted-foreground hover:text-foreground'}"
 					on:click={() => ($page.url.pathname = link.href)}>{link.name}</a
 				>
 			{/each}

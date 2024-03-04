@@ -15,38 +15,38 @@ const config = {
 		},
 		extend: {
 			colors: {
-				border: 'hsl(var(--border) / <alpha-value>)',
-				input: 'hsl(var(--input) / <alpha-value>)',
-				ring: 'hsl(var(--ring) / <alpha-value>)',
-				background: 'hsl(var(--background) / <alpha-value>)',
-				foreground: 'hsl(var(--foreground) / <alpha-value>)',
+				border: 'hsl(240 3.7 15.9 / <alpha-value>)',
+				input: 'hsl(240 3.7 15.9 / <alpha-value>)',
+				ring: 'hsl(240 3.7 15.9 / <alpha-value>)',
+				background: 'hsl(240 10 3.9 / <alpha-value>)',
+				foreground: 'hsl(0 0 98 / <alpha-value>)',
 				primary: {
-					DEFAULT: '#c026d3',
-					foreground: 'hsl(var(--primary-foreground) / <alpha-value>)'
+					DEFAULT: 'hsl(0 0 98 / <alpha-value>)',
+					foreground: 'hsl(240 5.9 10 / <alpha-value>)'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
-					foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)'
+					DEFAULT: 'hsl(60 100 82 / <alpha-value>)',
+					foreground: 'hsl(0 0 100 / <alpha-value>)'
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
-					foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
+					DEFAULT: 'hsl(0 72 51 / <alpha-value>)',
+					foreground: 'hsl(0 0 100 / <alpha-value>)'
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
-					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)'
+					DEFAULT: 'hsl(240 3.7 15.9 / <alpha-value>)',
+					foreground: 'hsl(240 5 64.9 / <alpha-value>)'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
-					foreground: 'hsl(var(--accent-foreground) / <alpha-value>)'
+					DEFAULT: 'hsl(240 3.7 15.9 / <alpha-value>)',
+					foreground: 'hsl(0 0 98 / <alpha-value>)'
 				},
 				popover: {
-					DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
-					foreground: 'hsl(var(--popover-foreground) / <alpha-value>)'
+					DEFAULT: 'hsl(240 10 3.9 / <alpha-value>)',
+					foreground: 'hsl(0 0 98 / <alpha-value>)'
 				},
 				card: {
-					DEFAULT: 'hsl(var(--card) / <alpha-value>)',
-					foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
+					DEFAULT: 'hsl(240 10 3.9 / <alpha-value>)',
+					foreground: 'hsl(0 0 98 / <alpha-value>)'
 				}
 			},
 			borderRadius: {

@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
+	import * as Select from '$lib/components/ui/select';
+	import * as Table from '$lib/components/ui/table';
+
+	import CardMov from '$lib/components/CardMov.svelte';
 
 	import { enhance } from '$app/forms';
-	import * as Select from '$lib/components/ui/select';
 	import type { ActionData, PageServerData } from './$types';
 
 	import { currencyFormatter, dateFormatter } from '$lib/utils';
-	import CardMov from '$lib/components/CardMov.svelte';
 
 	const mesesOpt = [
 		'Janeiro',
@@ -44,6 +46,29 @@
 		}}
 	>
 		<Select.Root
+			selected={mesSelecionado
+				? mesesOpt.find((m) => m.value === mesSelecionado)
+				: mesesOpt.find((m) => m.value === data.mesHoje)}
+			items={mesesOpt}
+			onSelectedChange={(v) => (v ? (mesSelecionado = v.value) : undefined)}
+		>
+			<Select.Trigger class="w-[180px]">
+				<Select.Value placeholder="Selecione um mês" />
+			</Select.Trigger>
+			<Select.Content>
+				<Select.Group>
+					<Select.Label>Mês</Select.Label>
+					{#each mesesOpt as mes}
+						<Select.Item
+							value={mes.value}
+							label={mes.label}
+						/>
+					{/each}
+				</Select.Group>
+			</Select.Content>
+			<Select.Input name="mes" />
+		</Select.Root>
+		<Select.Root
 			items={anosOpt}
 			selected={anoSelecionado
 				? anosOpt.find((m) => m.value === anoSelecionado)
@@ -68,34 +93,11 @@
 			</Select.Content>
 			<Select.Input name="ano" />
 		</Select.Root>
-		<Select.Root
-			selected={mesSelecionado
-				? mesesOpt.find((m) => m.value === mesSelecionado)
-				: mesesOpt.find((m) => m.value === data.mesHoje)}
-			items={mesesOpt}
-			onSelectedChange={(v) => (v ? (mesSelecionado = v.value) : undefined)}
-		>
-			<Select.Trigger class="w-[180px]">
-				<Select.Value placeholder="Selecione um mês" />
-			</Select.Trigger>
-			<Select.Content>
-				<Select.Group>
-					<Select.Label>Mês</Select.Label>
-					{#each mesesOpt as mes}
-						<Select.Item
-							value={mes.value}
-							label={mes.label}
-						/>
-					{/each}
-				</Select.Group>
-			</Select.Content>
-			<Select.Input name="mes" />
-		</Select.Root>
 		<Button type="submit">Vai</Button>
 	</form>
 </div>
 
-<div class="mt-12 grid place-items-center text-xl">
+<div class="mt-12 grid place-items-center gap-6 text-xl">
 	{#if form}
 		{#if form.ok}
 			<CardMov
@@ -103,30 +105,30 @@
 				saldo={form.saldo}
 				total={form.transacoes?.length}
 			/>
-			<table>
-				<thead class="border-b-2 border-primary">
-					<tr>
+
+			<h2>Transações de {mesesOpt[form.data.mes - 1].label} de {form.data.ano}</h2>
+			<Table.Root class="mx-auto max-w-4xl">
+				<Table.Header>
+					<Table.Row class="hover:bg-inherit">
 						{#each headers as header}
-							<th class="px-4 py-2 text-center font-bold capitalize">{header}</th>
+							<Table.Head class="capitalize">{header}</Table.Head>
 						{/each}
-					</tr>
-				</thead>
-				<tbody>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
 					{#if form.transacoes}
 						{#each form.transacoes as transacao}
-							<tr class="border-b-2 border-slate-800 border-opacity-50 py-4 hover:bg-slate-300">
-								<td class="px-12 py-5 text-center">{transacao.partes?.nome}</td>
-								<td class="px-12 py-5 text-center capitalize">{transacao.transacoes.tipo}</td>
-								<td class="px-12 py-5 text-center"
-									>{currencyFormatter(transacao.transacoes.valor)}</td
-								>
-								<td class="px-12 py-5 text-center">{dateFormatter(transacao.transacoes.data)}</td>
-								<td class="px-12 py-5 text-center">{transacao.transacoes.motivo}</td>
-							</tr>
+							<Table.Row>
+								<Table.Cell>{transacao.partes?.nome}</Table.Cell>
+								<Table.Cell class="capitalize">{transacao.transacoes.tipo}</Table.Cell>
+								<Table.Cell>{currencyFormatter(transacao.transacoes.valor)}</Table.Cell>
+								<Table.Cell>{dateFormatter(transacao.transacoes.data)}</Table.Cell>
+								<Table.Cell>{transacao.transacoes.motivo}</Table.Cell>
+							</Table.Row>
 						{/each}
 					{/if}
-				</tbody>
-			</table>
+				</Table.Body>
+			</Table.Root>
 		{:else}
 			<p>{form.error}</p>
 		{/if}

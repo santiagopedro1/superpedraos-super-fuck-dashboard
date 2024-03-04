@@ -7,11 +7,11 @@
 	<div class="grid grid-cols-3 grid-rows-1 gap-8">
 		<CardSaldo />
 		<CardMov
-			title="entradas"
+			title="Entradas"
 			saldo={50}
 		/>
 		<CardMov
-			title="saídas"
+			title="Saídas"
 			saldo={-50}
 		/>
 	</div>

@@ -10,7 +10,7 @@
 	}
 </script>
 
-<Card class="bg-neutral-100">
+<Card>
 	<CardHeader>
 		<CardTitle>
 			<div class="flex justify-between">
