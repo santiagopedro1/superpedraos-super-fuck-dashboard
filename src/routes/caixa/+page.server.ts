@@ -50,19 +50,9 @@ export const actions = {
 			if (transacoes.length) {
 				transacoes.sort((a, b) => a.data.getTime() - b.data.getTime());
 
-				let saldo = 0;
-				transacoes.forEach((t) => {
-					if ('destino' in t) {
-						saldo += t.valor;
-					} else {
-						saldo -= t.valor;
-					}
-				});
-
 				return {
 					ok: true,
 					transacoes,
-					saldo,
 					data: { mes, ano }
 				};
 			} else

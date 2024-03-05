@@ -1,32 +1,18 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import * as Select from '$lib/components/ui/select';
-	import * as Table from '$lib/components/ui/table';
-
-	import CardMov from '$lib/components/CardMov.svelte';
+	import * as Tabs from '$lib/components/ui/tabs';
+	import TransacoesTab from './transacoesTab.svelte';
+	import DemoTab from './demoTab.svelte';
 
 	import { enhance } from '$app/forms';
 	import type { ActionData, PageServerData } from './$types';
 
-	import { currencyFormatter, dateFormatter, isEntrada } from '$lib/utils';
+	import { Meses } from '$lib/utils';
 
-	const mesesOpt = [
-		'Janeiro',
-		'Fevereiro',
-		'Março',
-		'Abril',
-		'Maio',
-		'Junho',
-		'Julho',
-		'Agosto',
-		'Setembro',
-		'Outubro',
-		'Novembro',
-		'Dezembro'
-	].map((month, i) => ({ value: i + 1, label: month }));
+	const mesesOpt = Meses.map((month, i) => ({ value: i + 1, label: month }));
 
 	const anosOpt = [2023, 2024].map((year) => ({ value: year, label: String(year) }));
-	const headers = ['nome', 'tipo', 'valor', 'data', 'origem/destino'];
 
 	export let form: ActionData;
 	export let data: PageServerData;
@@ -36,7 +22,7 @@
 		loading = false;
 </script>
 
-<div>
+<main>
 	<form
 		method="POST"
 		action="?/mesAno"
@@ -98,76 +84,50 @@
 		</Select.Root>
 		<Button type="submit">Vai</Button>
 	</form>
-</div>
 
-<div class="mt-12 grid place-items-center gap-6 text-xl">
-	{#if form}
-		{#if form.ok}
-			<CardMov
-				title="Saldo de {mesesOpt[form.data.mes - 1].label} de {form.data.ano}"
-				saldo={form.saldo}
-				total={form.transacoes?.length}
-			/>
-
-			<h2>Transações de {mesesOpt[form.data.mes - 1].label} de {form.data.ano}</h2>
-			<Table.Root class="mx-auto max-w-4xl">
-				<Table.Header>
-					<Table.Row class="hover:bg-inherit">
-						{#each headers as header}
-							<Table.Head class="capitalize">{header}</Table.Head>
-						{/each}
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{#if form.transacoes}
-						{#each form.transacoes as transacao}
-							<Table.Row>
-								<Table.Cell>
-									{#if isEntrada(transacao)}
-										{transacao.vendedor}
-									{:else}
-										{transacao.motivo}
-									{/if}
-								</Table.Cell>
-								<Table.Cell>
-									{#if isEntrada(transacao)}
-										Entrada
-									{:else}
-										Saída
-									{/if}
-								</Table.Cell>
-								<Table.Cell>{currencyFormatter(transacao.valor)}</Table.Cell>
-								<Table.Cell>{dateFormatter(transacao.data)}</Table.Cell>
-								<Table.Cell class="capitalize">
-									{#if isEntrada(transacao)}
-										{transacao.destino}
-									{:else}
-										{transacao.origem}
-									{/if}
-								</Table.Cell>
-							</Table.Row>
-						{/each}
-					{/if}
-				</Table.Body>
-			</Table.Root>
+	<div class="mt-12">
+		{#if form}
+			{#if form.ok && form.transacoes}
+				<Tabs.Root
+					value="transacoes"
+					class="grid place-items-center gap-4"
+				>
+					<Tabs.List>
+						<Tabs.Trigger value="transacoes">Transações</Tabs.Trigger>
+						<Tabs.Trigger value="demo">Demonstrativo</Tabs.Trigger>
+					</Tabs.List>
+					<Tabs.Content value="transacoes">
+						<TransacoesTab
+							transacoes={form.transacoes}
+							data={form.data}
+						/>
+					</Tabs.Content>
+					<Tabs.Content value="demo">
+						<DemoTab
+							transacoes={form.transacoes}
+							data={form.data}
+						/>
+					</Tabs.Content>
+				</Tabs.Root>
+			{:else}
+				<p>{form.error}</p>
+			{/if}
+		{:else if loading}
+			<svg
+				fill="none"
+				class="mx-auto h-24 w-24 animate-spin stroke-2"
+				viewBox="0 0 32 32"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					clip-rule="evenodd"
+					d="M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z"
+					fill="currentColor"
+					fill-rule="evenodd"
+				/>
+			</svg>
 		{:else}
-			<p>{form.error}</p>
+			<p>Escolha um mês e um ano</p>
 		{/if}
-	{:else if loading}
-		<svg
-			fill="none"
-			class="h-24 w-24 animate-spin stroke-2"
-			viewBox="0 0 32 32"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				clip-rule="evenodd"
-				d="M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z"
-				fill="currentColor"
-				fill-rule="evenodd"
-			/>
-		</svg>
-	{:else}
-		<p>Escolha um mês e um ano</p>
-	{/if}
-</div>
+	</div>
+</main>

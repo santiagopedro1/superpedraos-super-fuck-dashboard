@@ -5,26 +5,12 @@
 	import * as Card from '$lib/components/ui/card';
 
 	import type { ChartConfiguration } from 'chart.js';
-
-	const labels = [
-		'Janeiro',
-		'Fevereiro',
-		'Março',
-		'Abril',
-		'Maio',
-		'Junho',
-		'Julho',
-		'Agosto',
-		'Setembro',
-		'Outubro',
-		'Novembro',
-		'Dezembro'
-	];
+	import { Meses } from '$lib/utils';
 
 	const config: ChartConfiguration = {
 		type: 'line',
 		data: {
-			labels,
+			labels: Meses,
 			datasets: [
 				{
 					label: 'Saldo total (R$)',

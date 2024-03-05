@@ -8,6 +8,20 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+	type Entrada = {
+		id: number;
+		valor: number;
+		destino: 'caixa' | 'banco';
+		data: Date;
+		vendedor: string;
+	};
+	type Saida = {
+		id: number;
+		valor: number;
+		motivo: string;
+		origem: 'caixa' | 'banco';
+		data: Date;
+	};
 }
 
 export {};
