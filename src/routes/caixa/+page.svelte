@@ -31,7 +31,9 @@
 	export let form: ActionData;
 	export let data: PageServerData;
 
-	let mesSelecionado: number, anoSelecionado: number;
+	let mesSelecionado: number,
+		anoSelecionado: number,
+		loading = false;
 </script>
 
 <div>
@@ -40,6 +42,7 @@
 		action="?/mesAno"
 		class="flex items-center justify-center gap-8"
 		use:enhance={() => {
+			loading = true;
 			return async ({ update }) => {
 				update({ reset: false });
 			};
@@ -150,6 +153,20 @@
 		{:else}
 			<p>{form.error}</p>
 		{/if}
+	{:else if loading}
+		<svg
+			fill="none"
+			class="h-24 w-24 animate-spin stroke-2"
+			viewBox="0 0 32 32"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				clip-rule="evenodd"
+				d="M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z"
+				fill="currentColor"
+				fill-rule="evenodd"
+			/>
+		</svg>
 	{:else}
 		<p>Escolha um mês e um ano</p>
 	{/if}

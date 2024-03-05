@@ -8,8 +8,8 @@
 			href: '/'
 		},
 		{
-			name: 'Demonstrativo',
-			href: '/demonstrativo'
+			name: 'Caixa',
+			href: '/caixa'
 		}
 	];
 </script>
