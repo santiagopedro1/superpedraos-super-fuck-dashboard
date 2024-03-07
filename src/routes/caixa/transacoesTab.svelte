@@ -12,7 +12,7 @@
 <h2 class="text-center">
 	Transações de {nomeMes(data.mes ? data.mes : 0)} de {data.ano}
 </h2>
-<Table.Root class="w-[56rem]">
+<Table.Root>
 	<Table.Header>
 		<Table.Row class="hover:bg-inherit">
 			{#each headers as header}

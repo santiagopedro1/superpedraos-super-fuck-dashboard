@@ -1,55 +1,29 @@
 <script lang="ts">
-	import CardSaldo from '$lib/components/CardSaldo.svelte';
-	import CardMov from '$lib/components/CardMov.svelte';
-	import Chart from '$lib/components/Chart.svelte';
 	import * as Card from '$lib/components/ui/card';
+	import { VisXYContainer, VisLine, VisAxis } from '@unovis/svelte';
 
-	import type { ChartConfiguration } from 'chart.js';
 	import { Meses } from '$lib/utils';
 
-	const config: ChartConfiguration = {
-		type: 'line',
-		data: {
-			labels: Meses,
-			datasets: [
-				{
-					label: 'Saldo total (R$)',
-					data: [650, 590, 800, 810, 560, 550, 400, 600, 700, 800, 900, 1000],
-					fill: false,
-					borderColor: 'rgb(75, 192, 192)',
-					tension: 0.1
-				}
-			]
-		},
-		options: {
-			plugins: {
-				legend: {
-					display: false
-				}
-			},
-			interaction: {
-				intersect: false,
-				axis: 'x',
-				mode: 'nearest'
-			}
-		}
+	type DataRecord = {
+		xAxisValue: number;
+		yAxisValue: number;
 	};
+	const data: DataRecord[] = Array.from({ length: 12 }, (_, i) => ({
+		xAxisValue: i + 1,
+		yAxisValue: Math.random() * 10000
+	}));
+	const tickFormat = (tick: number, i: number) => Meses[i];
+	const x = (d: DataRecord) => d.xAxisValue;
+	const y = (d: DataRecord) => d.yAxisValue;
 </script>
 
-<main class="grid place-content-center place-items-center gap-12">
-	<div class="grid grid-cols-3 grid-rows-1 gap-16">
-		<CardSaldo />
-		<CardMov
-			title="Entradas"
-			saldo={50}
-		/>
-		<CardMov
-			title="Saídas"
-			saldo={-50}
-		/>
-	</div>
-
-	<Card.Root class="w-full">
+<main class="space-y-8">
+	<h1 class="text-center text-4xl">
+		SUPERPEDRÃO'S <br />
+		SUPER FUCK <br />
+		DASHBOARD
+	</h1>
+	<Card.Root>
 		<Card.Header>
 			<Card.Title>Saldo total durante o ano</Card.Title>
 			<Card.Description
@@ -57,7 +31,29 @@
 			>
 		</Card.Header>
 		<Card.Content>
-			<Chart {config} />
+			<VisXYContainer {data}>
+				<VisLine
+					{x}
+					{y}
+				/>
+				<VisAxis
+					type="x"
+					label="Mês"
+					{tickFormat}
+					numTicks={12}
+					gridLine={false}
+				/>
+				<VisAxis
+					type="y"
+					label="Saldo"
+				/>
+			</VisXYContainer>
 		</Card.Content>
 	</Card.Root>
 </main>
+
+<style>
+	:root {
+		--vis-axis-grid-color: hsl(240 3.7 15.9);
+	}
+</style>

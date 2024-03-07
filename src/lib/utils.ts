@@ -89,3 +89,17 @@ export const nomeMes = (n: number) => {
 	}
 	return Meses[n - 1];
 };
+
+export const TiposSaidas = new Map([
+	['fornecedores', 'Pagamento de Fornecedores'],
+	['pessoal', 'Pagamento de Pessoal'],
+	['prolabore', 'Pagamento de Pró-Labore'],
+	['escritorio', 'Material de Escritório/Expediente'],
+	['agualuztel', 'Pagamento de água/luz/telefone'],
+	['terceiros', 'Pagamento de Terceiros'],
+	['impostos', 'Pagamento de Impostos'],
+	['encargos', 'Encargos Trabalhistas'],
+	['bens', 'Aquisição de Bens'],
+	['bancarias', 'Tarifas Bancárias'],
+	['propaganda', 'Promoções e Propaganda']
+]);
