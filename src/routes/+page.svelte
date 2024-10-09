@@ -14,8 +14,8 @@
 		<Table.Row class="hover:bg-inherit">
 			<Table.Head class="w-9">Código</Table.Head>
 			<Table.Head>Valor</Table.Head>
-			<Table.Head>Destino</Table.Head>
 			<Table.Head>Data</Table.Head>
+			<Table.Head>Destino</Table.Head>
 			<Table.Head>Descrição</Table.Head>
 		</Table.Row>
 	</Table.Header>
@@ -24,8 +24,8 @@
 			<Table.Row>
 				<Table.Cell>{code}</Table.Cell>
 				<Table.Cell class="w-32 font-medium">{currencyFormatter(amount)}</Table.Cell>
-				<Table.Cell class="w-24 capitalize">{destination}</Table.Cell>
 				<Table.Cell class="w-24">{date.toLocaleDateString('pt-BR')}</Table.Cell>
+				<Table.Cell class="w-24 capitalize">{destination}</Table.Cell>
 				<Table.Cell>{description || sales_rep_id || '-'}</Table.Cell>
 				<Table.Cell class="w-6">
 					<Actions {id} />
