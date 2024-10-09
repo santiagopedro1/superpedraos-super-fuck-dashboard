@@ -1,59 +1,36 @@
 <script lang="ts">
-	import * as Card from '$lib/components/ui/card';
-	import { VisXYContainer, VisLine, VisAxis } from '@unovis/svelte';
+	import * as Table from '$lib/components/ui/table';
 
-	import { Meses } from '$lib/utils';
+	import Actions from '$lib/components/table-item-actions.svelte';
 
-	type DataRecord = {
-		xAxisValue: number;
-		yAxisValue: number;
-	};
-	const data: DataRecord[] = Array.from({ length: 12 }, (_, i) => ({
-		xAxisValue: i + 1,
-		yAxisValue: Math.random() * 10000
-	}));
-	const tickFormat = (tick: number, i: number) => Meses[i];
-	const x = (d: DataRecord) => d.xAxisValue;
-	const y = (d: DataRecord) => d.yAxisValue;
+	import { currencyFormatter } from '$lib';
+
+	const { data } = $props();
 </script>
 
-<main class="space-y-8">
-	<h1 class="text-center text-4xl">
-		SUPERPEDRÃO'S <br />
-		SUPER FUCK <br />
-		DASHBOARD
-	</h1>
-	<Card.Root>
-		<Card.Header>
-			<Card.Title>Saldo total durante o ano</Card.Title>
-			<Card.Description
-				>Saldo total de entradas e saídas durante o ano. Fake obviamente</Card.Description
-			>
-		</Card.Header>
-		<Card.Content>
-			<VisXYContainer {data}>
-				<VisLine
-					{x}
-					{y}
-				/>
-				<VisAxis
-					type="x"
-					label="Mês"
-					{tickFormat}
-					numTicks={12}
-					gridLine={false}
-				/>
-				<VisAxis
-					type="y"
-					label="Saldo"
-				/>
-			</VisXYContainer>
-		</Card.Content>
-	</Card.Root>
-</main>
-
-<style>
-	:root {
-		--vis-axis-grid-color: hsl(240 3.7 15.9);
-	}
-</style>
+<Table.Root>
+	<Table.Caption>Últimas transações</Table.Caption>
+	<Table.Header>
+		<Table.Row class="hover:bg-inherit">
+			<Table.Head class="w-9">Código</Table.Head>
+			<Table.Head>Valor</Table.Head>
+			<Table.Head>Destino</Table.Head>
+			<Table.Head>Data</Table.Head>
+			<Table.Head>Descrição</Table.Head>
+		</Table.Row>
+	</Table.Header>
+	<Table.Body>
+		{#each data.latest_transactions as { id, code, date, amount, description, destination, sales_rep_id } (id)}
+			<Table.Row>
+				<Table.Cell>{code}</Table.Cell>
+				<Table.Cell class="w-32 font-medium">{currencyFormatter(amount)}</Table.Cell>
+				<Table.Cell class="w-24 capitalize">{destination}</Table.Cell>
+				<Table.Cell class="w-24">{date.toLocaleDateString('pt-BR')}</Table.Cell>
+				<Table.Cell>{description || sales_rep_id || '-'}</Table.Cell>
+				<Table.Cell class="w-6">
+					<Actions {id} />
+				</Table.Cell>
+			</Table.Row>
+		{/each}
+	</Table.Body>
+</Table.Root>

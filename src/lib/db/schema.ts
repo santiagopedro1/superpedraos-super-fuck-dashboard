@@ -1,24 +1,18 @@
-import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
+import { int, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-export const vendedores = sqliteTable('vendedores', {
-	id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+import { createId } from '@paralleldrive/cuid2';
+
+export const sales_rep = sqliteTable('vendedor', {
+	id: text().primaryKey().$defaultFn(createId),
 	nome: text('nome').notNull()
 });
 
-export const entrada = sqliteTable('entrada', {
-	id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-	valor: real('valor').notNull(),
-	destino: text('destino', { enum: ['caixa', 'banco'] }).notNull(),
-	data: integer('data', { mode: 'timestamp' }).notNull(),
-	vendedor_id: integer('vendedor_id')
-		.references(() => vendedores.id)
-		.notNull()
-});
-
-export const saida = sqliteTable('saida', {
-	id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-	valor: real('valor').notNull(),
-	motivo: text('motivo').notNull(),
-	origem: text('origem', { enum: ['caixa', 'banco'] }).notNull(),
-	data: integer('data', { mode: 'timestamp' }).notNull()
+export const transaction = sqliteTable('transacao', {
+	id: text().primaryKey().$defaultFn(createId),
+	code: int('codigo').notNull(),
+	amount: real('valor').notNull(),
+	destination: text('destino', { enum: ['caixa', 'banco'] }).notNull(),
+	date: int('data', { mode: 'timestamp_ms' }).notNull(),
+	description: text('descricao'),
+	sales_rep_id: text('vendedor_id').references(() => sales_rep.id)
 });

@@ -1,33 +1,20 @@
 <script lang="ts">
-	import '../app.pcss';
-	import { page } from '$app/stores';
+	import { Separator } from '$lib/components/ui/separator';
 
-	const links = [
-		{
-			name: 'Visão geral',
-			href: '/'
-		},
-		{
-			name: 'Caixa',
-			href: '/caixa'
-		}
-	];
+	import '../app.css';
+
+	const { children } = $props();
 </script>
 
-<div class="bg-background pl-[calc(100vw-100%)] text-foreground">
-	<nav class="flex h-16 items-center justify-center gap-4">
-		{#each links as link}
-			<a
-				href={link.href}
-				class="rounded-md px-3 py-2 text-sm font-bold {$page.url.pathname === link.href
-					? 'pointer-events-none'
-					: 'text-muted-foreground hover:text-foreground'}"
-				on:click={() => ($page.url.pathname = link.href)}>{link.name}</a
-			>
-		{/each}
-	</nav>
+<header class="space-y-4 py-4 px-8 text-center lg:px-16">
+	<h1 class="scroll-m-20 text-xl font-extrabold tracking-tight">
+		SUPERPEDRÃO'S SUPER FUCK DASHBOARD
+	</h1>
+	<Separator class="bg-primary" />
+</header>
 
-	<main class="px-72 py-8">
-		<slot />
+<div class="flex justify-center">
+	<main class="w-full max-w-6xl space-y-8 p-4">
+		{@render children()}
 	</main>
 </div>
