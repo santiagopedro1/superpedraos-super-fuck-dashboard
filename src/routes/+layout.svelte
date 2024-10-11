@@ -10,7 +10,7 @@
 	<h1 class="scroll-m-20 text-xl font-extrabold tracking-tight">
 		SUPERPEDRÃO'S SUPER FUCK DASHBOARD
 	</h1>
-	<Separator class="bg-primary" />
+	<Separator class="bg-primary h-0.5" />
 </header>
 
 <div class="flex justify-center">

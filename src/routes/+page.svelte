@@ -1,12 +1,24 @@
 <script lang="ts">
 	import * as Table from '$lib/components/ui/table';
+	import { Button } from '$lib/components/ui/button';
 
 	import Actions from '$lib/components/table-item-actions.svelte';
+
+	import { ArrowRight } from 'lucide-svelte';
 
 	import { currencyFormatter } from '$lib';
 
 	const { data } = $props();
 </script>
+
+<Button
+	variant="link"
+	class="cursor-pointer"
+	href="/relatorios"
+>
+	Relatórios
+	<ArrowRight />
+</Button>
 
 <Table.Root>
 	<Table.Caption>Últimas transações</Table.Caption>
