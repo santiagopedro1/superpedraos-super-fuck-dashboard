@@ -8,7 +8,7 @@ export const load = (async () => {
 		.select()
 		.from(schema.transaction)
 		.orderBy(desc(schema.transaction.date))
-		.limit(10);
+		.limit(5);
 
 	return { latest_transactions };
 }) satisfies PageServerLoad;

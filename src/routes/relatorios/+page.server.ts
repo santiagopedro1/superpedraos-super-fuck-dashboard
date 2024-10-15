@@ -7,6 +7,9 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import { formSchema } from '$lib/form-schema';
 
+import { db, schema } from '$lib/db';
+import { eq } from 'drizzle-orm';
+
 export const load: PageServerLoad = async () => {
 	return {
 		form: await superValidate(zod(formSchema))
@@ -27,11 +30,13 @@ export const actions: Actions = {
 
 		switch (data.type.value) {
 			case 'single':
+				const transactions = await db
+					.select()
+					.from(schema.transaction)
+					.where(eq(schema.transaction.date, data.query));
 				return {
 					form,
-					data: {
-						message: 'Deu certo'
-					}
+					transactions
 				};
 			case 'month':
 				return fail(400, {
