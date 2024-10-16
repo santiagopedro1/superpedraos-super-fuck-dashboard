@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { Calendar as CalendarPrimitive } from 'bits-ui';
+	import { RangeCalendar as RangeCalendarPrimitive } from 'bits-ui';
 	import { cn } from '$lib/utils.js';
 
-	type $$Props = CalendarPrimitive.GridRowProps;
+	type $$Props = RangeCalendarPrimitive.GridRowProps;
 
 	let className: $$Props['class'] = undefined;
 	export { className as class };
 </script>
 
-<CalendarPrimitive.GridRow
+<RangeCalendarPrimitive.GridRow
 	class={cn('flex', className)}
 	{...$$restProps}
 >
 	<slot />
-</CalendarPrimitive.GridRow>
+</RangeCalendarPrimitive.GridRow>

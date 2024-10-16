@@ -8,7 +8,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema } from '$lib/form-schema';
 
 import { db, schema } from '$lib/db';
-import { eq } from 'drizzle-orm';
+import { and, lte, gte, desc } from 'drizzle-orm';
 
 export const load: PageServerLoad = async () => {
 	return {
@@ -27,25 +27,19 @@ export const actions: Actions = {
 		}
 
 		const { data } = form;
+		const { query } = data;
 
-		switch (data.type.value) {
-			case 'single':
-				const transactions = await db
-					.select()
-					.from(schema.transaction)
-					.where(eq(schema.transaction.date, data.query));
-				return {
-					form,
-					transactions
-				};
-			case 'month':
-				return fail(400, {
-					form
-				});
-			case 'year':
-				return fail(400, {
-					form
-				});
-		}
+		const transactions = await db
+			.select()
+			.from(schema.transaction)
+			.where(
+				and(gte(schema.transaction.date, query.start), lte(schema.transaction.date, query.end))
+			)
+			.orderBy(desc(schema.transaction.date));
+
+		return {
+			form,
+			transactions: transactions.length > 1 ? transactions : null
+		};
 	}
 };

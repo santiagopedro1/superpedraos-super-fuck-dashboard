@@ -1,10 +1,13 @@
 import { z } from 'zod';
 
 export const formSchema = z.object({
-	type: z.object({
-		value: z.string()
-	}),
-	query: z.date({ message: 'Escolha uma data.' })
+	query: z.object(
+		{
+			start: z.date(),
+			end: z.date()
+		},
+		{ message: 'Data inválida' }
+	)
 });
 
 export type FormSchema = typeof formSchema;

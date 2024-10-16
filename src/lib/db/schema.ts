@@ -1,6 +1,7 @@
 import { int, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 import { createId } from '@paralleldrive/cuid2';
+import type { InferSelectModel } from 'drizzle-orm';
 
 export const sales_rep = sqliteTable('vendedor', {
 	id: text().primaryKey().$defaultFn(createId),
@@ -16,3 +17,5 @@ export const transaction = sqliteTable('transacao', {
 	description: text('descricao'),
 	sales_rep_id: text('vendedor_id').references(() => sales_rep.id)
 });
+
+export type Transaction = InferSelectModel<typeof transaction>;
