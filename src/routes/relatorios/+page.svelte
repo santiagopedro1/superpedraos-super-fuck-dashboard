@@ -6,6 +6,7 @@
 
 	import * as Form from '$lib/components/ui/form';
 	import DatePicker from '$lib/components/date-picker.svelte';
+	import Relatorio from '$lib/components/relatorio.svelte';
 
 	import { getLocalTimeZone } from '@internationalized/date';
 
@@ -48,7 +49,7 @@
 			class="flex flex-col"
 		>
 			<Form.Control let:attrs>
-				<Form.Label>Data</Form.Label>
+				<Form.Label>Período</Form.Label>
 				<DatePicker bind:value />
 				<Form.FieldErrors />
 				<input
@@ -59,13 +60,13 @@
 			</Form.Control>
 		</Form.Field>
 
-		<Form.Button class="max-w-max self-center">Gerar</Form.Button>
+		<Form.Button class="max-w-max self-center">Gerar relatório</Form.Button>
 	</div>
 </form>
 
 {#if formAction}
 	{#if formAction.transactions}
-		<pre>{JSON.stringify(formAction.transactions, null, 2)}</pre>
+		<Relatorio transactions={formAction.transactions} />
 	{:else}
 		<p class="text-center text-xl">Nenhum dado encontrado para a data especificada</p>
 	{/if}
