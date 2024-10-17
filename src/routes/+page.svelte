@@ -1,59 +1,49 @@
 <script lang="ts">
+	import { currencyFormatter } from '$lib';
+
 	import * as Card from '$lib/components/ui/card';
-	import { VisXYContainer, VisLine, VisAxis } from '@unovis/svelte';
 
-	import { Meses } from '$lib/utils';
+	import { DollarSign, Landmark, Wallet } from 'lucide-svelte';
 
-	type DataRecord = {
-		xAxisValue: number;
-		yAxisValue: number;
-	};
-	const data: DataRecord[] = Array.from({ length: 12 }, (_, i) => ({
-		xAxisValue: i + 1,
-		yAxisValue: Math.random() * 10000
-	}));
-	const tickFormat = (tick: number, i: number) => Meses[i];
-	const x = (d: DataRecord) => d.xAxisValue;
-	const y = (d: DataRecord) => d.yAxisValue;
+	const { data } = $props();
 </script>
 
-<main class="space-y-8">
-	<h1 class="text-center text-4xl">
-		SUPERPEDRÃO'S <br />
-		SUPER FUCK <br />
-		DASHBOARD
-	</h1>
+<div class="grid grid-cols-3 gap-8">
 	<Card.Root>
-		<Card.Header>
-			<Card.Title>Saldo total durante o ano</Card.Title>
-			<Card.Description
-				>Saldo total de entradas e saídas durante o ano. Fake obviamente</Card.Description
-			>
+		<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+			<Card.Title>cash register</Card.Title>
+			<DollarSign class="text-muted-foreground h-4 w-4" />
 		</Card.Header>
 		<Card.Content>
-			<VisXYContainer {data}>
-				<VisLine
-					{x}
-					{y}
-				/>
-				<VisAxis
-					type="x"
-					label="Mês"
-					{tickFormat}
-					numTicks={12}
-					gridLine={false}
-				/>
-				<VisAxis
-					type="y"
-					label="Saldo"
-				/>
-			</VisXYContainer>
+			<p class="text-2xl font-extrabold">
+				{currencyFormatter(data.sum_in_cash - data.sum_out_cash)}
+			</p>
 		</Card.Content>
 	</Card.Root>
-</main>
 
-<style>
-	:root {
-		--vis-axis-grid-color: hsl(240 3.7 15.9);
-	}
-</style>
+	<Card.Root>
+		<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+			<Card.Title>bank balance</Card.Title>
+			<Landmark class="text-muted-foreground h-4 w-4" />
+		</Card.Header>
+		<Card.Content>
+			<p class="text-2xl font-extrabold">
+				{currencyFormatter(data.sum_in_bank - data.sum_out_bank)}
+			</p>
+		</Card.Content>
+	</Card.Root>
+
+	<Card.Root>
+		<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+			<Card.Title>total balance</Card.Title>
+			<Wallet class="text-muted-foreground h-4 w-4" />
+		</Card.Header>
+		<Card.Content>
+			<p class="text-2xl font-extrabold">
+				{currencyFormatter(
+					data.sum_in_bank + data.sum_in_cash - (data.sum_out_bank + data.sum_out_cash)
+				)}
+			</p>
+		</Card.Content>
+	</Card.Root>
+</div>

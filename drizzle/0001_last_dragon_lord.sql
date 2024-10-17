@@ -1,1 +1,0 @@
-ALTER TABLE transacoes ADD `dinheiro` integer NOT NULL;
