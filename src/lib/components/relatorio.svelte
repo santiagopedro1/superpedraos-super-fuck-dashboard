@@ -3,6 +3,7 @@
 	import type { Transaction } from '$lib/db/schema';
 
 	import * as Card from '$lib/components/ui/card';
+	import TransactionTable from './transaction-table.svelte';
 
 	const { transactions }: { transactions: Array<Transaction> } = $props();
 
@@ -53,3 +54,13 @@
 		</Card.Content>
 	</Card.Root>
 </div>
+
+<Card.Root>
+	<Card.Header>
+		<Card.Title>All transactions</Card.Title>
+		<Card.Description>{transactions.length} transactions</Card.Description>
+	</Card.Header>
+	<Card.Content>
+		<TransactionTable {transactions} />
+	</Card.Content>
+</Card.Root>
