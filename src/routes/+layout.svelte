@@ -6,11 +6,7 @@
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 
-	const navLinks = [
-		{ href: '/', label: 'visão geral' },
-		{ href: '/caixa', label: 'caixa' },
-		{ href: '/relatorios', label: 'relatórios' }
-	];
+	const navLinks = ['/', '/transactions', '/reports'];
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -31,7 +27,7 @@
 		SUPERPEDRÃO'S SUPER FUCK DASHBOARD
 	</h1>
 	<nav class="flex w-full justify-center gap-4 justify-self-center">
-		{#each navLinks as { href, label }}
+		{#each navLinks as href}
 			<div class="flex flex-col">
 				<Button
 					variant="ghost"
@@ -40,7 +36,7 @@
 					class="text-base font-bold uppercase {$page.url.pathname === href &&
 						'text-primary pointer-events-none'}"
 				>
-					{label}
+					{href === '/' ? 'Overview' : href.slice(1)}
 				</Button>
 				{#if $page.url.pathname === href}
 					<div

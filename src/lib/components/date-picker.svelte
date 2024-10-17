@@ -10,7 +10,7 @@
 	import CalendarIcon from 'lucide-svelte/icons/calendar';
 	import { CalendarDate, DateFormatter, getLocalTimeZone, today } from '@internationalized/date';
 
-	const df = new DateFormatter('pt-BR', {
+	const df = new DateFormatter('en-US', {
 		dateStyle: 'long'
 	});
 
@@ -34,7 +34,7 @@
 				{df.format(value.start.toDate(getLocalTimeZone()))}
 			{/if}
 		{:else}
-			Escolha um período
+			Choose a period
 		{/if}
 		<CalendarIcon class="ml-auto h-4 w-4 opacity-50" />
 	</Popover.Trigger>
@@ -47,7 +47,7 @@
 			minValue={new CalendarDate(2024, 1, 1)}
 			maxValue={today(getLocalTimeZone())}
 			numberOfMonths={2}
-			locale="pt-BR"
+			locale="en-US"
 			initialFocus
 		/>
 	</Popover.Content>

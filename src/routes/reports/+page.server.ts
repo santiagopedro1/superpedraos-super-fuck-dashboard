@@ -27,13 +27,13 @@ export const actions: Actions = {
 		}
 
 		const { data } = form;
-		const { query } = data;
+		const { period } = data;
 
 		const transactions = await db
 			.select()
 			.from(schema.transaction)
 			.where(
-				and(gte(schema.transaction.date, query.start), lte(schema.transaction.date, query.end))
+				and(gte(schema.transaction.date, period.start), lte(schema.transaction.date, period.end))
 			)
 			.orderBy(desc(schema.transaction.date));
 

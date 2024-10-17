@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 export const formSchema = z.object({
-	query: z.object(
+	period: z.object(
 		{
 			start: z.date(),
 			end: z.date()
 		},
-		{ message: 'Data inválida' }
+		{ message: 'Invalid period' }
 	)
 });
 

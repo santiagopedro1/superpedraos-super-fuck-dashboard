@@ -28,7 +28,7 @@
 	$effect(() => {
 		if (value) {
 			if (value.start && value.end) {
-				$formData.query = {
+				$formData.period = {
 					start: value.start.toDate(getLocalTimeZone()),
 					end: value.end.toDate(getLocalTimeZone())
 				};
@@ -45,11 +45,11 @@
 	<div class="flex justify-center gap-16">
 		<Form.Field
 			{form}
-			name="query"
+			name="period"
 			class="flex flex-col"
 		>
 			<Form.Control let:attrs>
-				<Form.Label>Período</Form.Label>
+				<Form.Label>Period</Form.Label>
 				<DatePicker bind:value />
 				<Form.FieldErrors />
 				<input
@@ -60,7 +60,7 @@
 			</Form.Control>
 		</Form.Field>
 
-		<Form.Button class="max-w-max self-center">Gerar relatório</Form.Button>
+		<Form.Button class="max-w-max self-center">Generate report</Form.Button>
 	</div>
 </form>
 
@@ -68,6 +68,6 @@
 	{#if formAction.transactions}
 		<Relatorio transactions={formAction.transactions} />
 	{:else}
-		<p class="text-center text-xl">Nenhum dado encontrado para a data especificada</p>
+		<p class="text-center text-xl">No data found for the specified period</p>
 	{/if}
 {/if}
