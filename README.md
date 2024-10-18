@@ -7,9 +7,9 @@ Patent pending.
 ## Roadmap
 
 - [ ] Cool feature to add, edit and delete transactions;
-- [ ] Cool tables;
-- [ ] Cool filtering for tables;
-- [ ] Cool infinite list;
+- [x] Cool tables;
+- [x] Cool filtering for tables;
+- [ ] Cool advanced filtering for tables;
 - [ ] Cool charts;
 - [ ] Transform into a Tauri app[^*];
 

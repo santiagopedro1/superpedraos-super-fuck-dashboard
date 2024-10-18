@@ -55,10 +55,10 @@
 	</Card.Root>
 </div>
 
-<Card.Root>
+<Card.Root class="col-span-3">
 	<Card.Header>
 		<Card.Title>All transactions</Card.Title>
-		<Card.Description>{transactions.length} transactions</Card.Description>
+		<Card.Description>{transactions.length} transactions on the period</Card.Description>
 	</Card.Header>
 	<Card.Content>
 		<TransactionTable {transactions} />

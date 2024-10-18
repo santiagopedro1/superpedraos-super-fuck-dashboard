@@ -1,73 +1,93 @@
 <script lang="ts">
-	import { formSchema, type FormSchema } from '$lib/form-schema';
-	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import type { ActionData } from './$types';
+	import { Button } from '$lib/components/ui/button';
+	import { Label } from '$lib/components/ui/label';
 
-	import * as Form from '$lib/components/ui/form';
 	import DatePicker from '$lib/components/date-picker.svelte';
 	import Relatorio from '$lib/components/relatorio.svelte';
 
 	import { getLocalTimeZone } from '@internationalized/date';
 
-	import type { DateRange } from 'bits-ui';
+	import { dateToCalendarDate } from '$lib';
 
-	let { data, form: formAction }: { data: SuperValidated<Infer<FormSchema>>; form: ActionData } =
-		$props();
+	import type { Transaction } from '$lib/db/schema';
+	import { Circle2 } from 'svelte-loading-spinners';
 
-	const form = superForm(data, {
-		validators: zodClient(formSchema),
-		dataType: 'json',
-		resetForm: false
-	});
+	const { data } = $props();
 
-	const { form: formData, enhance } = form;
+	let value = $state(
+		data.period
+			? { start: dateToCalendarDate(data.period.start), end: dateToCalendarDate(data.period.end) }
+			: undefined
+	);
 
-	let value: DateRange | undefined = $state();
+	let transactions_promise: Promise<Array<Transaction>> | undefined = $state();
 
-	$effect(() => {
-		if (value) {
-			if (value.start && value.end) {
-				$formData.period = {
-					start: value.start.toDate(getLocalTimeZone()),
-					end: value.end.toDate(getLocalTimeZone())
-				};
-			}
-		}
-	});
+	async function onsubmit() {
+		const base_api_url = 'api/transactions';
+		const params = new URLSearchParams({
+			start: value!.start.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR'),
+			end: value!.end.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR')
+		});
+
+		const api_url = base_api_url + '?' + params.toString();
+
+		transactions_promise = fetch(api_url).then((response) => response.json());
+	}
 </script>
 
-<form
-	method="POST"
-	use:enhance
-	class="flex justify-center"
->
-	<div class="flex justify-center gap-16">
-		<Form.Field
-			{form}
-			name="period"
-			class="flex flex-col"
+<div class="flex justify-center">
+	<div>
+		<form
+			{onsubmit}
+			class="flex justify-center gap-16"
 		>
-			<Form.Control let:attrs>
-				<Form.Label>Period</Form.Label>
+			<div class="flex flex-col gap-1">
+				<Label>Period</Label>
 				<DatePicker bind:value />
-				<Form.FieldErrors />
-				<input
-					hidden
-					{value}
-					name={attrs.name}
-				/>
-			</Form.Control>
-		</Form.Field>
-
-		<Form.Button class="max-w-max self-center">Generate report</Form.Button>
+			</div>
+			<input
+				type="hidden"
+				name="period"
+				value={value?.start?.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR') +
+					'-' +
+					value?.end?.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR')}
+			/>
+			<div class="flex gap-3">
+				<Button
+					variant="outline"
+					class="self-center"
+					onclick={() => (value = undefined)}
+				>
+					Clear
+				</Button>
+				<Button
+					type="submit"
+					class="self-center"
+				>
+					Generate report
+				</Button>
+			</div>
+		</form>
 	</div>
-</form>
+</div>
 
-{#if formAction}
-	{#if formAction.transactions}
-		<Relatorio transactions={formAction.transactions} />
-	{:else}
-		<p class="text-center text-xl">No data found for the specified period</p>
-	{/if}
+{#if transactions_promise}
+	{#await transactions_promise}
+		<div class="flex justify-center">
+			<Circle2
+				size="200"
+				colorOuter="#7C3AED"
+				colorCenter="#458588"
+				colorInner="#D79921"
+			/>
+		</div>
+	{:then transactions}
+		{@const fixed_transactions = transactions.map((transaction) => ({
+			...transaction,
+			date: new Date(transaction.date)
+		}))}
+		<Relatorio transactions={fixed_transactions} />
+	{:catch error}
+		<p class="text-destructive text-center text-xl">{error}</p>
+	{/await}
 {/if}

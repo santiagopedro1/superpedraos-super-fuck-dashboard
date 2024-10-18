@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
-	import { cn } from '$lib/utils';
 
 	type $$Props = HTMLAttributes<HTMLTableSectionElement>;
 
@@ -9,7 +8,7 @@
 </script>
 
 <tbody
-	class={cn('[&_tr:last-child]:border-0', className)}
+	class={className}
 	{...$$restProps}
 >
 	<slot />
