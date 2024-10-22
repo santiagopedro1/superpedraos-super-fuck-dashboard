@@ -1,22 +1,39 @@
 <script lang="ts">
-	import { Pencil } from 'lucide-svelte/icons';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { Edit } from 'lucide-svelte/icons';
 	import { Button } from '$lib/components/ui/button';
 
+	import TransactionForm from './transaction-form.svelte';
+
+	import type { Transaction } from '$lib/db/schema';
+
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import type { EditTransactionSchema } from '$lib/transaction-form-schema';
+
 	interface Props {
-		id: string;
+		transaction: Transaction;
+		edit_transaction_form: SuperValidated<Infer<EditTransactionSchema>>;
 	}
 
-	const { id }: Props = $props();
-
-	function editRow() {
-		console.log('Editing row', id);
-	}
+	const { transaction, edit_transaction_form }: Props = $props();
 </script>
 
-<Button
-	variant="ghost"
-	size="icon"
-	onclick={editRow}
->
-	<Pencil size="16" />
-</Button>
+<Dialog.Root>
+	<Dialog.Trigger>
+		<Button
+			variant="outline"
+			size="icon"
+		>
+			<Edit />
+		</Button>
+	</Dialog.Trigger>
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title>Add a Transaction</Dialog.Title>
+		</Dialog.Header>
+		<TransactionForm
+			super_form={edit_transaction_form}
+			{transaction}
+		/>
+	</Dialog.Content>
+</Dialog.Root>

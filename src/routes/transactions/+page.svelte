@@ -10,7 +10,7 @@
 
 	let { data } = $props();
 
-	const { super_form } = data;
+	const { add_transaction_form, edit_transaction_form } = data;
 </script>
 
 <div class="flex flex-col items-center gap-4">
@@ -33,13 +33,14 @@
 				<Dialog.Header>
 					<Dialog.Title>Add a Transaction</Dialog.Title>
 				</Dialog.Header>
-				<TransactionForm {super_form} />
+				<TransactionForm super_form={add_transaction_form} />
 			</Dialog.Content>
 		</Dialog.Root>
 
 		<TransactionTable
 			{transactions}
 			interactive
+			{edit_transaction_form}
 		/>
 	{:catch error}
 		<p>error: {error.message}</p>

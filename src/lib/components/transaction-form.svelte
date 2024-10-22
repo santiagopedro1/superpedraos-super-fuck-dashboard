@@ -4,30 +4,37 @@
 	import { Input } from '$lib/components/ui/input';
 	import DatePicker from './date-picker.svelte';
 
-	import type { FormSchema } from '$lib/transaction-form-schema';
 	import { superForm, type SuperValidated, type Infer } from 'sveltekit-superforms';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import { form_schema } from '$lib/transaction-form-schema';
+	import {
+		new_transaction_schema,
+		edit_transaction_schema,
+		type NewTransactionSchema,
+		type EditTransactionSchema
+	} from '$lib/transaction-form-schema';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
 	import { toast } from 'svelte-sonner';
 
 	import type { Transaction } from '$lib/db/schema';
 
-	import { getLocalTimeZone, today, type CalendarDate } from '@internationalized/date';
+	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
+	import type { Selected } from 'bits-ui';
 
-	interface Props {
-		super_form: SuperValidated<Infer<FormSchema>>;
-		default_values?: Transaction;
-	}
+	type Props = {
+		super_form: SuperValidated<Infer<NewTransactionSchema | EditTransactionSchema>>;
+		transaction?: Transaction;
+	};
 
-	let { super_form, default_values }: Props = $props();
+	let { super_form, transaction }: Props = $props();
 
 	const form = superForm(super_form, {
-		validators: zodClient(form_schema),
+		validators: transaction
+			? zodClient(edit_transaction_schema)
+			: zodClient(new_transaction_schema),
 		onUpdated({ form }) {
 			if (form.valid) {
-				toast.success('Transaction added successfully');
+				toast.success($message);
 				selected_code = { value: undefined };
 				selected_dest = { value: undefined };
 				$form_data.date = selected_date!.toDate(getLocalTimeZone());
@@ -35,9 +42,9 @@
 		}
 	});
 
-	const { form: form_data, enhance } = form;
+	if (transaction) super_form = super_form as SuperValidated<Infer<EditTransactionSchema>>;
 
-	if (default_values) $form_data = default_values;
+	const { form: form_data, enhance, message } = form;
 
 	const code_options = {
 		income: [{ label: '1. Default income', value: 1 }],
@@ -50,8 +57,22 @@
 	];
 
 	let selected_date: CalendarDate | undefined = $state(today(getLocalTimeZone()));
-	let selected_code = $state({ value: undefined });
-	let selected_dest = $state({ value: undefined });
+	let selected_code: Selected<number | undefined> = $state({ value: undefined });
+	let selected_dest: Selected<string | undefined> = $state({ value: undefined });
+
+	if (transaction) {
+		$form_data = transaction;
+		selected_code = Object.values(code_options)
+			.flatMap((arr) => arr)
+			.map((obj) => ({ label: obj.label, value: obj.value }))
+			.find(({ value }) => value === transaction.code)!;
+		selected_dest = destination_options.find(({ value }) => value === transaction.destination)!;
+		selected_date = new CalendarDate(
+			transaction.date.getFullYear(),
+			transaction.date.getMonth() + 1,
+			transaction.date.getDate()
+		);
+	}
 
 	$effect(() => {
 		if (selected_date) $form_data.date = selected_date.toDate(getLocalTimeZone());
@@ -60,9 +81,32 @@
 
 <form
 	method="POST"
+	action={transaction ? '?/edit' : '?/add'}
 	class="grid grid-cols-2 gap-x-8 gap-y-2"
 	use:enhance
 >
+	{#if 'id' in $form_data}
+		<Form.Field
+			{form}
+			name="id"
+			class="col-span-2"
+		>
+			<Form.Control let:attrs>
+				<Form.Label>ID</Form.Label>
+				<Input
+					{...attrs}
+					value={$form_data.id}
+					disabled
+				/>
+			</Form.Control>
+			<input
+				type="hidden"
+				name="id"
+				value={$form_data.id}
+			/>
+		</Form.Field>
+	{/if}
+
 	<Form.Field
 		{form}
 		name="code"
