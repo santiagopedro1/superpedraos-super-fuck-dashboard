@@ -2,6 +2,7 @@
 	import '../app.css';
 
 	import { Button } from '$lib/components/ui/button';
+	import { Toaster } from '$lib/components/ui/sonner';
 
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -21,6 +22,8 @@
 
 	const { children } = $props();
 </script>
+
+<Toaster />
 
 <header class="grid grid-cols-3 items-center py-4 px-8">
 	<h1 class="justify-self-start text-xl font-extrabold tracking-tight">

@@ -6,7 +6,7 @@
 
 	import type { DateRange } from 'bits-ui';
 
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils.js';
 
 	import CalendarIcon from 'lucide-svelte/icons/calendar';
 	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
@@ -29,7 +29,7 @@
 	<Popover.Trigger
 		class={cn(
 			buttonVariants({ variant: 'outline' }),
-			'w-sm justify-start pl-4 text-left font-normal'
+			'w-full max-w-sm justify-start pl-4 text-left font-normal'
 		)}
 	>
 		{#if selected_range?.start && selected_range?.end}

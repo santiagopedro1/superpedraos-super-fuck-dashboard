@@ -74,7 +74,7 @@
 				plugins: {
 					filter: {
 						getFilterValue(value) {
-							return value.toLowerCase();
+							return value ? value.toLowerCase() : '-';
 						}
 					}
 				}
