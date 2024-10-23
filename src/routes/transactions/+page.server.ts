@@ -14,7 +14,6 @@ export const load = (async () => {
 		.select()
 		.from(schema.transaction)
 		.orderBy(desc(schema.transaction.date))
-		.limit(10)
 		.execute();
 
 	const add_transaction_form = await superValidate(zod(new_transaction_schema));
