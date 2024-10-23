@@ -2,6 +2,8 @@
 	import { Render, Subscribe, createRender, createTable } from 'svelte-headless-table';
 	import { addPagination, addSelectedRows, addTableFilter } from 'svelte-headless-table/plugins';
 
+	import { toast } from 'svelte-sonner';
+
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { EditTransactionSchema } from '$lib/transaction-form-schema';
 
@@ -119,12 +121,21 @@
 	const { filterValue } = pluginStates.filter;
 	const { selectedDataIds } = pluginStates.select;
 
-	function deleteSelectedRows() {
+	let selected_transactions_ids = $state('');
+
+	async function deleteSelectedRows() {
 		const selected_rows_ids = Object.keys($selectedDataIds);
-		const selected_transactions_ids = transactions
+		selected_transactions_ids = transactions
 			.filter((_, i) => selected_rows_ids.includes(i.toString()))
-			.map((transaction) => transaction.id);
-		console.log('Selected transactions', selected_transactions_ids);
+			.map((transaction) => transaction.id)
+			.join(',');
+
+		const res = await fetch(`/transactions?ids=${selected_transactions_ids}`, {
+			method: 'DELETE'
+		});
+
+		if (res.status === 204) toast.success('Transactions deleted successfully');
+		else toast.error('Something went wrong');
 	}
 </script>
 

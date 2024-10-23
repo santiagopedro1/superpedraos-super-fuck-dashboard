@@ -43,8 +43,6 @@ export const actions = {
 
 		const { data } = form;
 
-		console.log(data);
-
 		await db.update(schema.transaction).set(data).where(eq(schema.transaction.id, data.id));
 
 		return message(form, 'Transaction edited successfully');
