@@ -2,6 +2,11 @@
 	import { Render, Subscribe, createRender, createTable } from 'svelte-headless-table';
 	import { addPagination, addSelectedRows, addTableFilter } from 'svelte-headless-table/plugins';
 
+	import { toast } from 'svelte-sonner';
+
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import type { EditTransactionSchema } from '$lib/transaction-form-schema';
+
 	import * as Table from '$lib/components/ui/table';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -19,9 +24,10 @@
 	interface Props {
 		transactions: Array<Transaction>;
 		interactive?: boolean;
+		edit_transaction_form: SuperValidated<Infer<EditTransactionSchema>>;
 	}
 
-	const { transactions, interactive = false }: Props = $props();
+	const { transactions, edit_transaction_form, interactive = false }: Props = $props();
 
 	const createColumnsArray = (interactive: boolean) => {
 		const allColumns = [
@@ -74,7 +80,7 @@
 				plugins: {
 					filter: {
 						getFilterValue(value) {
-							return value.toLowerCase();
+							return value ? value.toLowerCase() : '-';
 						}
 					}
 				}
@@ -82,20 +88,20 @@
 			table.column({
 				id: 'edit',
 				header: '',
-				accessor: ({ id }) => id,
+				accessor: (t) => t,
 				cell: (item) => {
 					// svelte 5 bug
-					return createRender(Edit as any, { id: item.value });
+					return createRender(Edit as any, {
+						transaction: item.value,
+						edit_transaction_form: edit_transaction_form
+					});
 				},
 				plugins: { filter: { exclude: true } }
 			})
 		];
 
-		if (!interactive) {
-			return table.createColumns(allColumns.slice(1, -1));
-		} else {
-			return table.createColumns(allColumns);
-		}
+		if (!interactive) return table.createColumns(allColumns.slice(1, -1));
+		else return table.createColumns(allColumns);
 	};
 
 	const table = createTable(readable(transactions), {
@@ -115,12 +121,21 @@
 	const { filterValue } = pluginStates.filter;
 	const { selectedDataIds } = pluginStates.select;
 
-	function deleteSelectedRows() {
+	let selected_transactions_ids = $state('');
+
+	async function deleteSelectedRows() {
 		const selected_rows_ids = Object.keys($selectedDataIds);
-		const selected_transactions_ids = transactions
+		selected_transactions_ids = transactions
 			.filter((_, i) => selected_rows_ids.includes(i.toString()))
-			.map((transaction) => transaction.id);
-		console.log('Selected transactions', selected_transactions_ids);
+			.map((transaction) => transaction.id)
+			.join(',');
+
+		const res = await fetch(`/transactions?ids=${selected_transactions_ids}`, {
+			method: 'DELETE'
+		});
+
+		if (res.status === 204) toast.success('Transactions deleted successfully');
+		else toast.error('Something went wrong');
 	}
 </script>
 
@@ -157,8 +172,8 @@
 									{...attrs}
 									class="
 									{cell.id === 'checkbox' ? 'w-9' : ''}
-									{cell.id === 'code' ? 'w-20' : ''}
-									{cell.id === 'amount' ? 'w-28' : ''}
+									{cell.id === 'code' ? 'w-20 text-center' : ''}
+									{cell.id === 'amount' ? 'w-36' : ''}
 									{cell.id === 'date' ? 'w-32' : ''}
 									{cell.id === 'destination' ? 'w-28' : ''}
 									{cell.id === 'edit' ? 'w-16' : ''}
@@ -189,7 +204,8 @@
 							>
 								<Table.Cell
 									class="
-									{cell.id === 'amount' ? 'font-bold' : ''}
+									{cell.id === 'amount' ? 'text-base font-bold' : ''}
+									{cell.id === 'code' ? 'text-center' : ''}
 									{cell.id === 'destination' ? 'capitalize' : ''}"
 									{...attrs}
 								>

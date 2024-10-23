@@ -1,40 +1,43 @@
 <script lang="ts">
 	import { RangeCalendar } from '$lib/components/ui/range-calendar';
+	import Calendar from '$lib/components/ui/calendar/calendar.svelte';
 	import * as Popover from '$lib/components/ui/popover';
 	import { buttonVariants } from '$lib/components/ui/button';
 
 	import type { DateRange } from 'bits-ui';
 
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils.js';
 
 	import CalendarIcon from 'lucide-svelte/icons/calendar';
-	import { CalendarDate, DateFormatter, getLocalTimeZone, today } from '@internationalized/date';
+	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
+	import { dateFormatter } from '$lib';
 
-	const df = new DateFormatter('en-US', {
-		dateStyle: 'long'
-	});
+	type Props = {
+		range?: boolean;
+		selected_range?: DateRange;
+		selected_date?: CalendarDate;
+	};
 
-	let { value = $bindable() }: { value: DateRange | undefined } = $props();
+	let {
+		selected_range = $bindable(),
+		selected_date = $bindable(),
+		range = false
+	}: Props = $props();
 </script>
 
 <Popover.Root>
 	<Popover.Trigger
 		class={cn(
 			buttonVariants({ variant: 'outline' }),
-			'w-sm justify-start pl-4 text-left font-normal',
-			!value && 'text-muted-foreground'
+			'w-full max-w-sm justify-start pl-4 text-left font-normal'
 		)}
 	>
-		{#if value && value.start}
-			{#if value.end}
-				{df.format(value.start.toDate(getLocalTimeZone()))} - {df.format(
-					value.end.toDate(getLocalTimeZone())
-				)}
-			{:else}
-				{df.format(value.start.toDate(getLocalTimeZone()))}
-			{/if}
+		{#if selected_range?.start && selected_range?.end}
+			{dateFormatter(selected_range.start)} - {dateFormatter(selected_range.end)}
+		{:else if selected_date}
+			{dateFormatter(selected_date)}
 		{:else}
-			Choose a period
+			{range ? 'Choose a period' : 'Choose a date'}
 		{/if}
 		<CalendarIcon class="ml-auto h-4 w-4 opacity-50" />
 	</Popover.Trigger>
@@ -42,13 +45,25 @@
 		class="w-auto p-0"
 		side="top"
 	>
-		<RangeCalendar
-			bind:value
-			minValue={new CalendarDate(2024, 1, 1)}
-			maxValue={today(getLocalTimeZone())}
-			numberOfMonths={2}
-			locale="en-US"
-			initialFocus
-		/>
+		{#if range}
+			<RangeCalendar
+				bind:value={selected_range}
+				minValue={new CalendarDate(2024, 1, 1)}
+				maxValue={today(getLocalTimeZone())}
+				numberOfMonths={2}
+				locale="en-US"
+				weekdayFormat="short"
+				initialFocus
+			/>
+		{:else}
+			<Calendar
+				bind:value={selected_date}
+				minValue={new CalendarDate(2024, 1, 1)}
+				maxValue={today(getLocalTimeZone())}
+				locale="en-US"
+				weekdayFormat="short"
+				initialFocus
+			/>
+		{/if}
 	</Popover.Content>
 </Popover.Root>

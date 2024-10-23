@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { currencyFormatter } from '$lib';
+	import DatePicker from '$lib/components/date-picker.svelte';
 
 	import * as Card from '$lib/components/ui/card';
+	import type { CalendarDate } from '@internationalized/date';
 
 	import { DollarSign, Landmark, Wallet } from 'lucide-svelte';
 
 	const { data } = $props();
+
+	let selected_date: CalendarDate | undefined = $state();
 </script>
 
 <div class="grid grid-cols-3 gap-8">

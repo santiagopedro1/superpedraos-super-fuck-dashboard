@@ -14,7 +14,7 @@
 
 	const { data } = $props();
 
-	let value = $state(
+	let selected_range = $state(
 		data.period
 			? { start: dateToCalendarDate(data.period.start), end: dateToCalendarDate(data.period.end) }
 			: undefined
@@ -25,8 +25,8 @@
 	async function onsubmit() {
 		const base_api_url = 'api/transactions';
 		const params = new URLSearchParams({
-			start: value!.start.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR'),
-			end: value!.end.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR')
+			start: selected_range!.start.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR'),
+			end: selected_range!.end.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR')
 		});
 
 		const api_url = base_api_url + '?' + params.toString();
@@ -43,20 +43,23 @@
 		>
 			<div class="flex flex-col gap-1">
 				<Label>Period</Label>
-				<DatePicker bind:value />
+				<DatePicker
+					bind:selected_range
+					range
+				/>
 			</div>
 			<input
 				type="hidden"
 				name="period"
-				value={value?.start?.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR') +
+				value={selected_range?.start?.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR') +
 					'-' +
-					value?.end?.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR')}
+					selected_range?.end?.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR')}
 			/>
 			<div class="flex gap-3">
 				<Button
 					variant="outline"
 					class="self-center"
-					onclick={() => (value = undefined)}
+					onclick={() => (selected_range = undefined)}
 				>
 					Clear
 				</Button>
