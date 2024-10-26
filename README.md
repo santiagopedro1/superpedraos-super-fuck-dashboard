@@ -1,5 +1,7 @@
 # SUPERPEDRÃO'S SUPER FUCK DASHBOARD
 
+# Currently waiting for libraries to be updated to svelte 5
+
 Working name.
 
 Patent pending.
