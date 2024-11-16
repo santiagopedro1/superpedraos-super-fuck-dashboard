@@ -1,6 +1,9 @@
 import type { PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms';
-import { new_transaction_schema, edit_transaction_schema } from '$lib/forms/transaction-form-schema';
+import {
+	new_transaction_schema,
+	edit_transaction_schema
+} from '$lib/forms/transaction-form-schema';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { db, schema } from '$lib/db';

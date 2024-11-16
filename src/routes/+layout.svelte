@@ -25,7 +25,7 @@
 
 <Toaster />
 
-<header class="grid grid-cols-3 items-center py-4 px-8">
+<header class="grid grid-cols-3 items-center px-8 py-4">
 	<h1 class="justify-self-start text-xl font-extrabold tracking-tight">
 		SUPERPEDRÃO'S SUPER FUCK DASHBOARD
 	</h1>
