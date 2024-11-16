@@ -56,7 +56,7 @@
 <form
 	method="POST"
 	action="?/add"
-	class="grid grid-cols-2 gap-x-8 gap-y-2"
+	class="grid grid-cols-2 items-center gap-x-8 gap-y-2"
 	use:enhance
 >
 	<Form.Field
@@ -151,7 +151,6 @@
 	<Form.Field
 		{form}
 		name="date"
-		class="flex flex-col"
 	>
 		<Form.Control let:attrs>
 			<Form.Label>Date<span class="text-destructive">*</span></Form.Label>
@@ -180,7 +179,7 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<Form.Button class="col-span-2">Submit</Form.Button>
-</form>
+	<p><span class="text-destructive">*</span> Required fields</p>
 
-<p><span class="text-destructive">*</span> Required fields</p>
+	<Form.Button>Submit</Form.Button>
+</form>
