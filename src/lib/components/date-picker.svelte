@@ -25,45 +25,42 @@
 	}: Props = $props();
 </script>
 
-<Popover.Root>
-	<Popover.Trigger
-		class={cn(
-			buttonVariants({ variant: 'outline' }),
-			'w-full max-w-sm justify-start pl-4 text-left font-normal'
-		)}
-	>
-		{#if selected_range?.start && selected_range?.end}
-			{dateFormatter(selected_range.start)} - {dateFormatter(selected_range.end)}
-		{:else if selected_date}
-			{dateFormatter(selected_date)}
-		{:else}
-			{range ? 'Choose a period' : 'Choose a date'}
-		{/if}
-		<CalendarIcon class="ml-auto h-4 w-4 opacity-50" />
-	</Popover.Trigger>
-	<Popover.Content
-		class="w-auto p-0"
-		side="top"
-	>
-		{#if range}
-			<RangeCalendar
-				bind:value={selected_range}
-				minValue={new CalendarDate(2024, 1, 1)}
-				maxValue={today(getLocalTimeZone())}
-				numberOfMonths={2}
-				locale="en-US"
-				weekdayFormat="short"
-				initialFocus
-			/>
-		{:else}
-			<Calendar
-				bind:value={selected_date}
-				minValue={new CalendarDate(2024, 1, 1)}
-				maxValue={today(getLocalTimeZone())}
-				locale="en-US"
-				weekdayFormat="short"
-				initialFocus
-			/>
-		{/if}
-	</Popover.Content>
-</Popover.Root>
+<div>
+	<Popover.Root>
+		<Popover.Trigger class={cn(buttonVariants({ variant: 'outline' }), 'gap-4 font-normal')}>
+			{#if selected_range?.start && selected_range?.end}
+				{dateFormatter(selected_range.start)} - {dateFormatter(selected_range.end)}
+			{:else if selected_date}
+				{dateFormatter(selected_date)}
+			{:else}
+				{range ? 'Choose a period' : 'Choose a date'}
+			{/if}
+			<CalendarIcon class="ml-auto h-4 w-4 opacity-50" />
+		</Popover.Trigger>
+		<Popover.Content
+			class="w-auto p-0"
+			side="top"
+		>
+			{#if range}
+				<RangeCalendar
+					bind:value={selected_range}
+					minValue={new CalendarDate(2024, 1, 1)}
+					maxValue={today(getLocalTimeZone())}
+					numberOfMonths={2}
+					locale="en-US"
+					weekdayFormat="short"
+					initialFocus
+				/>
+			{:else}
+				<Calendar
+					bind:value={selected_date}
+					minValue={new CalendarDate(2024, 1, 1)}
+					maxValue={today(getLocalTimeZone())}
+					locale="en-US"
+					weekdayFormat="short"
+					initialFocus
+				/>
+			{/if}
+		</Popover.Content>
+	</Popover.Root>
+</div>

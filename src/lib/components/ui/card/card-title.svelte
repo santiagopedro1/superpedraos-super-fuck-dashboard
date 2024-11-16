@@ -14,7 +14,7 @@
 
 <svelte:element
 	this={tag}
-	class={cn('text-lg font-semibold capitalize leading-none tracking-tight', className)}
+	class={cn('text-lg leading-none font-semibold tracking-tight capitalize', className)}
 	{...$$restProps}
 >
 	<slot />

@@ -23,7 +23,7 @@
 	let transactions_promise: Promise<Array<Transaction>> | undefined = $state();
 
 	async function onsubmit() {
-		const base_api_url = 'api/transactions';
+		const base_api_url = 'transactions/get';
 		const params = new URLSearchParams({
 			start: selected_range!.start.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR'),
 			end: selected_range!.end.toDate(getLocalTimeZone()).toLocaleDateString('pt-BR')
@@ -41,13 +41,11 @@
 			{onsubmit}
 			class="flex justify-center gap-16"
 		>
-			<div class="flex flex-col gap-1">
-				<Label>Period</Label>
-				<DatePicker
-					bind:selected_range
-					range
-				/>
-			</div>
+			<DatePicker
+				bind:selected_range
+				range
+			/>
+
 			<input
 				type="hidden"
 				name="period"

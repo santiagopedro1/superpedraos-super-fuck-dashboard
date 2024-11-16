@@ -1,19 +1,26 @@
 <script lang="ts">
 	import TransactionTable from '$lib/components/transaction-table.svelte';
-	import TransactionForm from '$lib/components/transaction-form.svelte';
 
-	import * as Dialog from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
 
 	import { Circle2 } from 'svelte-loading-spinners';
-	import { Plus } from 'lucide-svelte';
+
+	import { ArrowRight } from 'lucide-svelte';
 
 	let { data } = $props();
 
-	const { add_transaction_form, edit_transaction_form } = data;
+	const { edit_transaction_form } = data;
 </script>
 
 <div class="flex flex-col items-center gap-4">
+	<Button
+		href="/transactions/new"
+		class="gap-2"
+	>
+		Add a Transaction
+		<ArrowRight />
+	</Button>
+
 	{#await data.all_transactions}
 		<Circle2
 			size="200"
@@ -22,21 +29,6 @@
 			colorInner="#D79921"
 		/>
 	{:then transactions}
-		<Dialog.Root>
-			<Dialog.Trigger>
-				<Button>
-					<Plus />
-					Add a transaction
-				</Button>
-			</Dialog.Trigger>
-			<Dialog.Content>
-				<Dialog.Header>
-					<Dialog.Title>Add a Transaction</Dialog.Title>
-				</Dialog.Header>
-				<TransactionForm super_form={add_transaction_form} />
-			</Dialog.Content>
-		</Dialog.Root>
-
 		<TransactionTable
 			{transactions}
 			interactive

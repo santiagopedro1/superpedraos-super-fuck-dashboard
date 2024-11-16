@@ -3,12 +3,12 @@
 	import { Edit } from 'lucide-svelte/icons';
 	import { Button } from '$lib/components/ui/button';
 
-	import TransactionForm from './transaction-form.svelte';
+	import TransactionForm from '$lib/forms/edit-transaction-form.svelte';
 
 	import type { Transaction } from '$lib/db/schema';
 
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-	import type { EditTransactionSchema } from '$lib/transaction-form-schema';
+	import type { EditTransactionSchema } from '$lib/forms/transaction-form-schema';
 
 	interface Props {
 		transaction: Transaction;

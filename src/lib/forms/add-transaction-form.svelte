@@ -2,36 +2,26 @@
 	import * as Form from '$lib/components/ui/form';
 	import * as Select from '$lib/components/ui/select';
 	import { Input } from '$lib/components/ui/input';
-	import DatePicker from './date-picker.svelte';
+	import DatePicker from '$lib/components/date-picker.svelte';
 
 	import { superForm, type SuperValidated, type Infer } from 'sveltekit-superforms';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import {
-		new_transaction_schema,
-		edit_transaction_schema,
-		type NewTransactionSchema,
-		type EditTransactionSchema
-	} from '$lib/transaction-form-schema';
+	import { new_transaction_schema, type NewTransactionSchema } from './transaction-form-schema';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
 	import { toast } from 'svelte-sonner';
-
-	import type { Transaction } from '$lib/db/schema';
 
 	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 	import type { Selected } from 'bits-ui';
 
 	type Props = {
-		super_form: SuperValidated<Infer<NewTransactionSchema | EditTransactionSchema>>;
-		transaction?: Transaction;
+		super_form: SuperValidated<Infer<NewTransactionSchema>>;
 	};
 
-	let { super_form, transaction }: Props = $props();
+	let { super_form }: Props = $props();
 
 	const form = superForm(super_form, {
-		validators: transaction
-			? zodClient(edit_transaction_schema)
-			: zodClient(new_transaction_schema),
+		validators: zodClient(new_transaction_schema),
 		onUpdated({ form }) {
 			if (form.valid) {
 				toast.success($message);
@@ -41,8 +31,6 @@
 			}
 		}
 	});
-
-	if (transaction) super_form = super_form as SuperValidated<Infer<EditTransactionSchema>>;
 
 	const { form: form_data, enhance, message } = form;
 
@@ -60,20 +48,6 @@
 	let selected_code: Selected<number | undefined> = $state({ value: undefined });
 	let selected_dest: Selected<string | undefined> = $state({ value: undefined });
 
-	if (transaction) {
-		$form_data = transaction;
-		selected_code = Object.values(code_options)
-			.flatMap((arr) => arr)
-			.map((obj) => ({ label: obj.label, value: obj.value }))
-			.find(({ value }) => value === transaction.code)!;
-		selected_dest = destination_options.find(({ value }) => value === transaction.destination)!;
-		selected_date = new CalendarDate(
-			transaction.date.getFullYear(),
-			transaction.date.getMonth() + 1,
-			transaction.date.getDate()
-		);
-	}
-
 	$effect(() => {
 		if (selected_date) $form_data.date = selected_date.toDate(getLocalTimeZone());
 	});
@@ -81,32 +55,10 @@
 
 <form
 	method="POST"
-	action={transaction ? '?/edit' : '?/add'}
-	class="grid grid-cols-2 gap-x-8 gap-y-2"
+	action="?/add"
+	class="grid grid-cols-2 items-center gap-x-8 gap-y-2"
 	use:enhance
 >
-	{#if 'id' in $form_data}
-		<Form.Field
-			{form}
-			name="id"
-			class="col-span-2"
-		>
-			<Form.Control let:attrs>
-				<Form.Label>ID</Form.Label>
-				<Input
-					{...attrs}
-					value={$form_data.id}
-					disabled
-				/>
-			</Form.Control>
-			<input
-				type="hidden"
-				name="id"
-				value={$form_data.id}
-			/>
-		</Form.Field>
-	{/if}
-
 	<Form.Field
 		{form}
 		name="code"
@@ -227,9 +179,7 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<Form.Button class="col-span-2">Submit</Form.Button>
+	<p><span class="text-destructive">*</span> Required fields</p>
+
+	<Form.Button>Submit</Form.Button>
 </form>
-
-<p><span class="text-destructive">*</span> Required fields</p>
-
-<SuperDebug data={$form_data} />
