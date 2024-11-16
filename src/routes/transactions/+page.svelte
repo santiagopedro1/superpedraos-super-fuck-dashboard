@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TransactionTable from '$lib/components/transaction-table.svelte';
-	import TransactionForm from '$lib/components/transaction-form.svelte';
+	import TransactionForm from '$lib/forms/add-transaction-form.svelte';
 
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';

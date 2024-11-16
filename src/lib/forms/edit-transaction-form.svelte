@@ -2,16 +2,11 @@
 	import * as Form from '$lib/components/ui/form';
 	import * as Select from '$lib/components/ui/select';
 	import { Input } from '$lib/components/ui/input';
-	import DatePicker from './date-picker.svelte';
+	import DatePicker from '$lib/components/date-picker.svelte';
 
 	import { superForm, type SuperValidated, type Infer } from 'sveltekit-superforms';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import {
-		new_transaction_schema,
-		edit_transaction_schema,
-		type NewTransactionSchema,
-		type EditTransactionSchema
-	} from '$lib/transaction-form-schema';
+	import { edit_transaction_schema, type EditTransactionSchema } from './transaction-form-schema';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
 	import { toast } from 'svelte-sonner';
@@ -22,16 +17,14 @@
 	import type { Selected } from 'bits-ui';
 
 	type Props = {
-		super_form: SuperValidated<Infer<NewTransactionSchema | EditTransactionSchema>>;
+		super_form: SuperValidated<Infer<EditTransactionSchema>>;
 		transaction?: Transaction;
 	};
 
 	let { super_form, transaction }: Props = $props();
 
 	const form = superForm(super_form, {
-		validators: transaction
-			? zodClient(edit_transaction_schema)
-			: zodClient(new_transaction_schema),
+		validators: zodClient(edit_transaction_schema),
 		onUpdated({ form }) {
 			if (form.valid) {
 				toast.success($message);
@@ -81,31 +74,29 @@
 
 <form
 	method="POST"
-	action={transaction ? '?/edit' : '?/add'}
+	action="?/edit"
 	class="grid grid-cols-2 gap-x-8 gap-y-2"
 	use:enhance
 >
-	{#if 'id' in $form_data}
-		<Form.Field
-			{form}
-			name="id"
-			class="col-span-2"
-		>
-			<Form.Control let:attrs>
-				<Form.Label>ID</Form.Label>
-				<Input
-					{...attrs}
-					value={$form_data.id}
-					disabled
-				/>
-			</Form.Control>
-			<input
-				type="hidden"
-				name="id"
+	<Form.Field
+		{form}
+		name="id"
+		class="col-span-2"
+	>
+		<Form.Control let:attrs>
+			<Form.Label>ID</Form.Label>
+			<Input
+				{...attrs}
 				value={$form_data.id}
+				disabled
 			/>
-		</Form.Field>
-	{/if}
+		</Form.Control>
+		<input
+			type="hidden"
+			name="id"
+			value={$form_data.id}
+		/>
+	</Form.Field>
 
 	<Form.Field
 		{form}
@@ -186,11 +177,16 @@
 	>
 		<Form.Control let:attrs>
 			<Form.Label>Amount<span class="text-destructive">*</span></Form.Label>
-			<Input
+			<!-- <Input
 				{...attrs}
 				bind:value={$form_data.amount}
 				type="number"
 				min="0"
+			/> -->
+			<input
+				type="number"
+				name="number"
+				bind:value={$form_data.amount}
 			/>
 		</Form.Control>
 		<Form.FieldErrors />

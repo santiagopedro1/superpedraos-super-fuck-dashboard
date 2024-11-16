@@ -5,7 +5,7 @@
 	import { toast } from 'svelte-sonner';
 
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-	import type { EditTransactionSchema } from '$lib/transaction-form-schema';
+	import type { EditTransactionSchema } from '$lib/forms/transaction-form-schema';
 
 	import * as Table from '$lib/components/ui/table';
 	import { Button } from '$lib/components/ui/button';
