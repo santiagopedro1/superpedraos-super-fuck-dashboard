@@ -26,12 +26,7 @@
 </script>
 
 <Popover.Root>
-	<Popover.Trigger
-		class={cn(
-			buttonVariants({ variant: 'outline' }),
-			'w-full max-w-sm justify-start pl-4 text-left font-normal'
-		)}
-	>
+	<Popover.Trigger class={cn(buttonVariants({ variant: 'outline' }), 'gap-4 font-normal')}>
 		{#if selected_range?.start && selected_range?.end}
 			{dateFormatter(selected_range.start)} - {dateFormatter(selected_range.end)}
 		{:else if selected_date}

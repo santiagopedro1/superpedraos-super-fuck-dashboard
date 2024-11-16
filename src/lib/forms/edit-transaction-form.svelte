@@ -177,16 +177,11 @@
 	>
 		<Form.Control let:attrs>
 			<Form.Label>Amount<span class="text-destructive">*</span></Form.Label>
-			<!-- <Input
+			<Input
 				{...attrs}
 				bind:value={$form_data.amount}
 				type="number"
 				min="0"
-			/> -->
-			<input
-				type="number"
-				name="number"
-				bind:value={$form_data.amount}
 			/>
 		</Form.Control>
 		<Form.FieldErrors />
@@ -227,5 +222,3 @@
 </form>
 
 <p><span class="text-destructive">*</span> Required fields</p>
-
-<SuperDebug data={$form_data} />

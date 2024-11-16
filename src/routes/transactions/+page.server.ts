@@ -19,10 +19,9 @@ export const load = (async () => {
 		.orderBy(desc(schema.transaction.date))
 		.execute();
 
-	const add_transaction_form = await superValidate(zod(new_transaction_schema));
 	const edit_transaction_form = await superValidate(zod(edit_transaction_schema));
 
-	return { all_transactions, add_transaction_form, edit_transaction_form };
+	return { all_transactions, edit_transaction_form };
 }) satisfies PageServerLoad;
 
 export const actions = {

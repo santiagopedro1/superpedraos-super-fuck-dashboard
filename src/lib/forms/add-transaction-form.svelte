@@ -11,8 +11,6 @@
 
 	import { toast } from 'svelte-sonner';
 
-	import type { Transaction } from '$lib/db/schema';
-
 	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 	import type { Selected } from 'bits-ui';
 
@@ -153,6 +151,7 @@
 	<Form.Field
 		{form}
 		name="date"
+		class="flex flex-col"
 	>
 		<Form.Control let:attrs>
 			<Form.Label>Date<span class="text-destructive">*</span></Form.Label>
@@ -185,5 +184,3 @@
 </form>
 
 <p><span class="text-destructive">*</span> Required fields</p>
-
-<SuperDebug data={$form_data} />
