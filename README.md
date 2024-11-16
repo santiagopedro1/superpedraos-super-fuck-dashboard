@@ -8,6 +8,8 @@ Patent pending.
 
 ## Roadmap
 
+- [ ] Upgrade to Svelte 5;
+
 - [x] Cool feature to add, edit and delete transactions;
 - [ ] Quality of life improvements form the add and edit transactions forms;
 - [x] Cool tables;
