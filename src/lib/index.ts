@@ -1,35 +1,62 @@
-import { CalendarDate, DateFormatter, type DateValue } from '@internationalized/date';
+import { db, schema, type Transaction } from '$lib/server/db';
 
-export const currencyFormatter = (n: number) => {
-	const r = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-	return r.format(n);
-};
+import { sql } from 'drizzle-orm';
 
-export const codeMapper = (code: number) => {
-	switch (code) {
-		case 1:
-			return 'Entrada';
-		case 2:
-			return 'Saída';
-	}
-};
+function createCode() {
+	return Math.random() < 0.7 ? 1 : 2;
+}
 
-export const dateToCalendarDate = (date: Date) => {
-	return new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
-};
+function createAmount() {
+	return Math.floor(Math.random() * (1000 - 10 + 1)) + 10;
+}
 
-export const dateFormatter = (
-	date: Date | DateValue,
-	tz: string = 'America/Sao_Paulo',
-	locale: string = 'pt-BR'
-) => {
-	const df = new DateFormatter(locale, {
-		dateStyle: 'long'
-	});
+function createType() {
+	return Math.random() < 0.25
+		? 'money'
+		: Math.random() < 0.5
+			? 'credit-card'
+			: Math.random() < 0.75
+				? 'debit-card'
+				: 'pix';
+}
 
-	if ('toDate' in date) {
-		date = date.toDate(tz);
-	}
+export async function seedDB() {
+	console.log('Seeding DB');
 
-	return df.format(date);
-};
+	const transactions: Array<Omit<Transaction, 'id'>> = Array.from({ length: 50 }, () => ({
+		code: createCode(),
+		amount: createAmount(),
+		date: new Date(),
+		type: createType(),
+		description: Math.random() > 0.5 ? 'fuck transaction' : null
+	}));
+
+	await db.insert(schema.transaction).values(transactions);
+}
+
+export async function getSumsAndCounts() {
+	const result = await db
+		.select({
+			moneySum: sql<number>`SUM(
+                CASE
+                    WHEN ${schema.transaction.type} = 'money' AND ${schema.transaction.code} = 1 THEN ${schema.transaction.amount}
+			WHEN ${schema.transaction.type} = 'money' AND ${schema.transaction.code} = 2 THEN -${schema.transaction.amount}
+			ELSE 0
+			END
+			)`,
+			otherTypesSum: sql<number>`SUM(
+                CASE
+                    WHEN ${schema.transaction.type} != 'money' AND ${schema.transaction.code} = 1 THEN ${schema.transaction.amount}
+			WHEN ${schema.transaction.type} != 'money' AND ${schema.transaction.code} = 2 THEN -${schema.transaction.amount}
+			ELSE 0
+			END
+			)`,
+			moneyCount: sql<number>`COUNT(CASE WHEN ${schema.transaction.type} = 'money' THEN 1 ELSE NULL END)`,
+			creditCardCount: sql<number>`COUNT(CASE WHEN ${schema.transaction.type} = 'credit-card' THEN 1 ELSE NULL END)`,
+			debitCardCount: sql<number>`COUNT(CASE WHEN ${schema.transaction.type} = 'debit-card' THEN 1 ELSE NULL END)`,
+			pixCount: sql<number>`COUNT(CASE WHEN ${schema.transaction.type} = 'pix' THEN 1 ELSE NULL END)`
+		})
+		.from(schema.transaction);
+
+	return result[0];
+}

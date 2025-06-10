@@ -1,9 +1,15 @@
-import type { Config } from 'drizzle-kit';
+import { defineConfig } from 'drizzle-kit';
 
-export default {
-	schema: './src/lib/db/schema.ts',
-	dialect: 'sqlite',
+if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
+
+export default defineConfig({
+	schema: './src/lib/server/db/schema.ts',
+
 	dbCredentials: {
-		url: './src/lib/db/sqlite.db'
-	}
-} satisfies Config;
+		url: process.env.DATABASE_URL
+	},
+
+	verbose: true,
+	strict: true,
+	dialect: 'mysql'
+});
